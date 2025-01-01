@@ -2,6 +2,9 @@ package org.car.allocation.model;
 
 import jakarta.persistence.*;
 
+import org.car.allocation.observer.VehicleObserver;
+import org.car.allocation.observer.VehicleStatusNotifier;
+
 @MappedSuperclass
 public abstract class Vehicle {
     @Id
@@ -25,6 +28,9 @@ public abstract class Vehicle {
 
     @Column(nullable = false)
     protected double mileage;
+
+    @Transient
+    private VehicleStatusNotifier statusNotifier = new VehicleStatusNotifier();
 
     public Vehicle () {}
 
@@ -59,6 +65,7 @@ public abstract class Vehicle {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+        statusNotifier.notifyObservers("Availability changed to: " + available);
     }
 
     public double getFuelLevel() {
@@ -83,5 +90,13 @@ public abstract class Vehicle {
 
     public void setMileage(double mileage) {
         this.mileage = mileage;
+    }
+
+    public void addObserver(VehicleObserver observer) {
+        statusNotifier.addObserver(observer);
+    }
+
+    public void removeObserver(VehicleObserver observer) {
+        statusNotifier.removeObserver(observer);
     }
 }
