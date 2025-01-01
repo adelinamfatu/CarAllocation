@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!--JDBC Database connection settings-->
+        <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
+        <property name="hibernate.connection.url">jdbc:sqlite:vehicles.db</property>
+        <property name="hibernate.dialect">org.hibernate.community.dialect.SQLiteDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!--Entities-->
+        <mapping class="org.car.allocation.model.Vehicle"/>
+        <mapping class="org.car.allocation.model.Car"/>
+        <mapping class="org.car.allocation.model.Truck"/>
+    </session-factory>
+</hibernate-configuration>
