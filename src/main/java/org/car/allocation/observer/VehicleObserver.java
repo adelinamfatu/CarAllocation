@@ -9,7 +9,6 @@ public interface VehicleObserver {
     /**
      * This method is called to notify the observer about the change in the
      * vehicle's status.
-     *
      * @param vehicleStatus The new status of the vehicle.
      */
     void update(String vehicleStatus);

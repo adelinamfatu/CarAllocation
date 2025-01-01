@@ -1,8 +1,8 @@
 package org.car.allocation.observer;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * The VehicleStatusNotifier class is responsible for managing the list of
  * observers and notifying them when the status of a vehicle changes.
@@ -14,7 +14,6 @@ public class VehicleStatusNotifier {
 
     /**
      * Adds a new observer to the list of observers.
-     *
      * @param observer The observer to be added.
      */
     public void addObserver(VehicleObserver observer) {
@@ -23,7 +22,6 @@ public class VehicleStatusNotifier {
 
     /**
      * Removes an observer from the list of observers.
-     *
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {
@@ -33,7 +31,6 @@ public class VehicleStatusNotifier {
     /**
      * Notifies all registered observers about a change in the vehicle's
      * status by calling their update method.
-     *
      * @param status The new status of the vehicle.
      */
     public void notifyObservers(String status) {

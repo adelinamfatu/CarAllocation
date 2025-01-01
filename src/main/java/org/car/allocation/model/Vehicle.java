@@ -1,9 +1,9 @@
 package org.car.allocation.model;
 
 import jakarta.persistence.*;
-
 import org.car.allocation.observer.VehicleObserver;
 import org.car.allocation.observer.VehicleStatusNotifier;
+
 /**
  * The abstract Vehicle class represents a generic vehicle with basic attributes such as
  * license plate, model, fuel level, availability, and maintenance status. It also
@@ -51,7 +51,7 @@ public abstract class Vehicle {
 
     public Vehicle () {}
 
-    public Vehicle(String licensePlate, String model, double fuelLevel) {
+    public Vehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
         this.licensePlate = licensePlate;
         this.model = model;
         this.fuelLevel = fuelLevel;
@@ -63,7 +63,6 @@ public abstract class Vehicle {
 
     /**
      * Retrieves the license plate of the vehicle.
-     *
      * @return The license plate of the vehicle.
      */
     public String getLicensePlate() {
@@ -72,7 +71,6 @@ public abstract class Vehicle {
 
     /**
      * Sets the license plate of the vehicle.
-     *
      * @param licensePlate The new license plate of the vehicle.
      */
     public void setLicensePlate(String licensePlate) {
@@ -81,7 +79,6 @@ public abstract class Vehicle {
 
     /**
      * Retrieves the model of the vehicle.
-     *
      * @return The model of the vehicle.
      */
     public String getModel() {
@@ -90,7 +87,6 @@ public abstract class Vehicle {
 
     /**
      * Sets the model of the vehicle.
-     *
      * @param model The new model of the vehicle.
      */
     public void setModel(String model) {
@@ -99,7 +95,6 @@ public abstract class Vehicle {
 
     /**
      * Checks if the vehicle is available for allocation.
-     *
      * @return true if the vehicle is available, false otherwise.
      */
     public boolean isAvailable() {
@@ -108,10 +103,8 @@ public abstract class Vehicle {
 
     /**
      * Sets the availability of the vehicle and notifies observers of the change.
-     *
      * @param available The new availability status of the vehicle.
      */
-
     public void setAvailable(boolean available) {
         isAvailable = available;
         statusNotifier.notifyObservers("Availability changed to: " + available);
@@ -119,17 +112,14 @@ public abstract class Vehicle {
 
     /**
      * Retrieves the current fuel level of the vehicle.
-     *
      * @return The fuel level of the vehicle.
      */
-
     public double getFuelLevel() {
         return fuelLevel;
     }
 
     /**
      * Sets the fuel level of the vehicle.
-     *
      * @param fuelLevel The new fuel level of the vehicle.
      */
 
@@ -139,7 +129,6 @@ public abstract class Vehicle {
 
     /**
      * Checks if the vehicle is in maintenance.
-     *
      * @return true if the vehicle is in maintenance, false otherwise.
      */
     public boolean isInMaintenance() {
@@ -148,7 +137,6 @@ public abstract class Vehicle {
 
     /**
      * Sets the maintenance status of the vehicle.
-     *
      * @param inMaintenance The new maintenance status of the vehicle.
      */
     public void setInMaintenance(boolean inMaintenance) {
@@ -157,7 +145,6 @@ public abstract class Vehicle {
 
     /**
      * Retrieves the total mileage of the vehicle.
-     *
      * @return The mileage of the vehicle.
      */
     public double getMileage() {
@@ -166,7 +153,6 @@ public abstract class Vehicle {
 
     /**
      * Sets the mileage of the vehicle.
-     *
      * @param mileage The new mileage of the vehicle.
      */
     public void setMileage(double mileage) {
@@ -175,7 +161,6 @@ public abstract class Vehicle {
 
     /**
      * Adds an observer to monitor the vehicle's status changes.
-     *
      * @param observer The observer to be added.
      */
     public void addObserver(VehicleObserver observer) {
@@ -184,7 +169,6 @@ public abstract class Vehicle {
 
     /**
      * Removes an observer from monitoring the vehicle's status changes.
-     *
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {
