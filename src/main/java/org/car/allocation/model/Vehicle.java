@@ -26,12 +26,17 @@ public abstract class Vehicle {
     @Column(nullable = false)
     protected double mileage;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    protected EngineType engineType;
+
     public Vehicle () {}
 
-    public Vehicle(String licensePlate, String model, double fuelLevel) {
+    public Vehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
         this.licensePlate = licensePlate;
         this.model = model;
         this.fuelLevel = fuelLevel;
+        this.engineType = engineType;
         this.isAvailable = true;
         this.isInMaintenance = false;
         this.mileage = 0.0;
@@ -83,5 +88,13 @@ public abstract class Vehicle {
 
     public void setMileage(double mileage) {
         this.mileage = mileage;
+    }
+
+    public EngineType getEngineType() {
+        return engineType;
+    }
+
+    public void setEngineType(EngineType engineType) {
+        this.engineType = engineType;
     }
 }
