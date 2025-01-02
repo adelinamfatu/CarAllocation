@@ -1,6 +1,6 @@
 package org.car.allocation.observer;
 
-/**
+/** VEHICLE OBSERVER INTERFACE
  * The VehicleObserver interface defines the contract for classes that want
  * to observe changes in the status of a vehicle. Implementing classes will
  * be notified when the status of a vehicle changes.
