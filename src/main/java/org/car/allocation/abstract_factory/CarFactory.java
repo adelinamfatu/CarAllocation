@@ -2,6 +2,7 @@ package org.car.allocation.abstract_factory;
 
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.util.EngineType;
 
 /**
  * CarFactory is responsible for creating Car objects.
@@ -9,7 +10,6 @@ import org.car.allocation.model.Vehicle;
  * the specific implementation to create a car based on the given
  * parameters, including the passenger capacity.
  */
-
 public class CarFactory implements VehicleFactory {
     private int passengerCapacity;
 
@@ -27,7 +27,7 @@ public class CarFactory implements VehicleFactory {
      *         fuel level, and passenger capacity.
      */
     @Override
-    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel) {
-        return new Car(licensePlate, model, fuelLevel, passengerCapacity);
+    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
+        return new Car(licensePlate, model, fuelLevel,engineType, passengerCapacity);
     }
 }

@@ -60,12 +60,6 @@ public abstract class Vehicle {
         this.mileage = 0.0;
     }
 
-    public Vehicle(String licensePlate, String model, double fuelLevel) {
-        this.licensePlate = licensePlate;
-        this.model = model;
-        this.fuelLevel = fuelLevel;
-    }
-
     /**
      * Retrieves the license plate of the vehicle.
      * @return The license plate of the vehicle.

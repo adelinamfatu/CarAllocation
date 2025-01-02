@@ -1,6 +1,8 @@
 package org.car.allocation.abstract_factory;
 
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.util.EngineType;
+
 /**
  * VehicleFactory is an interface that defines the contract for creating
  * different types of vehicles. Any class implementing this interface
@@ -16,5 +18,5 @@ public interface VehicleFactory {
      * @return A new Vehicle object with the specified license plate, model,
      *         and fuel level.
      */
-    Vehicle createVehicle(String licensePlate, String model, double fuelLevel);
+    Vehicle createVehicle(String licensePlate, String model, double fuelLevel, EngineType engineType);
 }

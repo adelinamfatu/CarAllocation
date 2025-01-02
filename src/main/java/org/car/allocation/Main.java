@@ -1,8 +1,8 @@
 package org.car.allocation;
 
-import org.car.allocation.handlers.AdminHandler;
-import org.car.allocation.handlers.ManagerHandler;
-import org.car.allocation.handlers.UserHandler;
+import org.car.allocation.handler.AdminHandler;
+import org.car.allocation.handler.ManagerHandler;
+import org.car.allocation.handler.UserHandler;
 import org.car.allocation.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,7 +39,7 @@ public class Main {
             System.out.println("4. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consumă newline-ul
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:

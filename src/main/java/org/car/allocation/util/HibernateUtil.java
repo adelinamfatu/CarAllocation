@@ -2,6 +2,7 @@ package org.car.allocation.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
 /**
  * HibernateUtil is a utility class for managing the Hibernate SessionFactory.
  * It is responsible for initializing the SessionFactory and providing methods
@@ -29,7 +30,6 @@ public class HibernateUtil {
 
     /**
      * Provides the SessionFactory instance.
-     *
      * @return The SessionFactory instance.
      */
     public static SessionFactory getSessionFactory() {

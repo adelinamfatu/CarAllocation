@@ -1,14 +1,14 @@
-package org.car.allocation.handlers;
+package org.car.allocation.handler;
 
 import org.car.allocation.util.UserRole;
 import org.car.allocation.observer.User;
 
 import java.util.Scanner;
 
-public class AdminHandler {
+public class UserHandler {
     private final Scanner scanner;
 
-    public AdminHandler(Scanner scanner) {
+    public UserHandler(Scanner scanner) {
         this.scanner = scanner;
     }
 
@@ -16,46 +16,36 @@ public class AdminHandler {
         System.out.println("\nPlease enter your username:");
         String username = scanner.nextLine();
 
-        User admin = new User(username, UserRole.ADMIN);
+        User user = new User(username, UserRole.DRIVER);
 
-        System.out.println("Welcome " + username + "! You are logged in as an ADMIN.");
-        System.out.println("You have full access to all operations: view, add, and delete vehicles.");
+        System.out.println("Welcome " + username + "! You are logged in as a DRIVER.");
+        System.out.println("You can reserve vehicles and view available vehicles.");
 
-        showAdminOptions();
+        showUserOptions();
     }
 
-    private void showAdminOptions() {
+    private void showUserOptions() {
         boolean backToMenu = false;
 
         while (!backToMenu) {
             System.out.println("\nWhat would you like to do?");
-            System.out.println("1. View all vehicles");
-            System.out.println("2. View vehicle status");
-            System.out.println("3. Add a new vehicle");
-            System.out.println("4. Delete a vehicle");
-            System.out.println("5. Go back to main menu");
+            System.out.println("1. View available vehicles");
+            System.out.println("2. Reserve a vehicle");
+            System.out.println("3. Go back to main menu");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    System.out.println("You chose option 1: View all vehicles.");
+                    System.out.println("You chose option 1: View available vehicles.");
                     askToReturnToOptions();
                     break;
                 case 2:
-                    System.out.println("You chose option 2: View vehicle status.");
+                    System.out.println("You chose option 2: Reserve a vehicle.");
                     askToReturnToOptions();
                     break;
                 case 3:
-                    System.out.println("You chose option 3: Add a new vehicle.");
-                    askToReturnToOptions();
-                    break;
-                case 4:
-                    System.out.println("You chose option 4: Delete a vehicle.");
-                    askToReturnToOptions();
-                    break;
-                case 5:
                     backToMenu = true;
                     break;
                 default:

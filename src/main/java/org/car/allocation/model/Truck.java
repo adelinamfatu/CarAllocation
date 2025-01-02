@@ -1,6 +1,7 @@
 package org.car.allocation.model;
 
 import jakarta.persistence.*;
+import org.car.allocation.util.EngineType;
 
 /**
  * The Truck class represents a truck object in the system. It extends the Vehicle class
@@ -21,8 +22,8 @@ public class Truck extends Vehicle {
      */
     public Truck() {}
 
-    public Truck(String licensePlate, String model, double fuelLevel, double cargoCapacity) {
-        super(licensePlate, model, fuelLevel);
+    public Truck(String licensePlate, String model, double fuelLevel, EngineType engineType, double cargoCapacity) {
+        super(licensePlate, model, fuelLevel, engineType);
         this.cargoCapacity = cargoCapacity;
     }
 
