@@ -2,8 +2,10 @@ package org.car.allocation;
 
 import org.car.allocation.handler.AdminHandler;
 import org.car.allocation.handler.ManagerHandler;
+import org.car.allocation.handler.UniversalHandler;
 import org.car.allocation.handler.UserHandler;
 import org.car.allocation.util.HibernateUtil;
+import org.car.allocation.util.UserRole;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -43,13 +45,13 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    new UserHandler(scanner).handleLogin();
+                    new UniversalHandler(scanner, UserRole.DRIVER).handleLogin();
                     break;
                 case 2:
-                    new ManagerHandler(scanner).handleLogin();
+                    new UniversalHandler(scanner, UserRole.MANAGER).handleLogin();
                     break;
                 case 3:
-                    new AdminHandler(scanner).handleLogin();
+                    new UniversalHandler(scanner, UserRole.ADMIN).handleLogin();
                     break;
                 case 4:
                     System.out.println("Exiting the system...");
