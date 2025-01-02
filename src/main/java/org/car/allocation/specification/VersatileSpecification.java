@@ -1,7 +1,7 @@
 package org.car.allocation.specification;
 
 import org.car.allocation.model.Car;
-import org.car.allocation.model.EngineType;
+import org.car.allocation.util.EngineType;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 

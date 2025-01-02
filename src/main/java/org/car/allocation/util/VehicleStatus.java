@@ -1,4 +1,4 @@
-package org.car.allocation.model;
+package org.car.allocation.util;
 
 /**
  * Enum for vehicle status

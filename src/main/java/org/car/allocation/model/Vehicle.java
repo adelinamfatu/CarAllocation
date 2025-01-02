@@ -3,6 +3,8 @@ package org.car.allocation.model;
 import jakarta.persistence.*;
 import org.car.allocation.observer.VehicleObserver;
 import org.car.allocation.observer.VehicleStatusNotifier;
+import org.car.allocation.util.EngineType;
+import org.car.allocation.util.VehicleStatus;
 
 /**
  * The abstract Vehicle class represents a generic vehicle with basic attributes such as
@@ -29,7 +31,7 @@ public abstract class Vehicle {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    protected VehicleStatus vehicleStatus; // Using VehicleStatus enum
+    protected VehicleStatus vehicleStatus;
 
     @Column(nullable = false)
     protected double fuelLevel;
@@ -54,7 +56,7 @@ public abstract class Vehicle {
         this.model = model;
         this.fuelLevel = fuelLevel;
         this.engineType = engineType;
-        this.vehicleStatus = VehicleStatus.AVAILABLE; // Default status
+        this.vehicleStatus = VehicleStatus.AVAILABLE; //Default status
         this.mileage = 0.0;
     }
 
@@ -109,14 +111,12 @@ public abstract class Vehicle {
      * Sets the fuel level of the vehicle.
      * @param fuelLevel The new fuel level of the vehicle.
      */
-
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;
     }
 
     /**
      * Retrieves the current status of the vehicle.
-     *
      * @return The current status (VehicleStatus) of the vehicle.
      */
     public VehicleStatus getVehicleStatus() {
@@ -125,7 +125,6 @@ public abstract class Vehicle {
 
     /**
      * Sets the status of the vehicle and notifies observers of the change.
-     *
      * @param vehicleStatus The new status of the vehicle.
      */
     public void setVehicleStatus(VehicleStatus vehicleStatus) {
@@ -149,9 +148,16 @@ public abstract class Vehicle {
         this.mileage = mileage;
     }
 
+    public EngineType getEngineType() {
+        return engineType;
+    }
+
+    public void setEngineType(EngineType engineType) {
+        this.engineType = engineType;
+    }
+
     /**
      * Adds an observer to monitor the vehicle's status changes.
-     *
      * @param observer The observer to be added.
      */
     public void addObserver(VehicleObserver observer) {
@@ -160,18 +166,9 @@ public abstract class Vehicle {
 
     /**
      * Removes an observer from monitoring the vehicle's status changes.
-     *
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {
         statusNotifier.removeObserver(observer);
-    }
-
-    public EngineType getEngineType() {
-        return engineType;
-    }
-
-    public void setEngineType(EngineType engineType) {
-        this.engineType = engineType;
     }
 }

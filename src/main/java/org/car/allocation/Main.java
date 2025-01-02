@@ -3,7 +3,6 @@ package org.car.allocation;
 import org.car.allocation.handlers.AdminHandler;
 import org.car.allocation.handlers.ManagerHandler;
 import org.car.allocation.handlers.UserHandler;
-import org.car.allocation.model.UserRole;
 import org.car.allocation.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

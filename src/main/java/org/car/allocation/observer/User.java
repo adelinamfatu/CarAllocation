@@ -1,8 +1,8 @@
 package org.car.allocation.observer;
 
-import org.car.allocation.model.UserRole;
+import org.car.allocation.util.UserRole;
 import org.car.allocation.model.Vehicle;
-import org.car.allocation.model.VehicleStatus;
+import org.car.allocation.util.VehicleStatus;
 
 /**
  * The User class represents a user who is notified of vehicle status changes.
@@ -14,18 +14,18 @@ public class User implements VehicleObserver {
     private String username;
     private UserRole role;
 
-    // Constructor to create a user with a specific role
+    //Constructor to create a user with a specific role
     public User(String username, UserRole role) {
         this.username = username;
         this.role = role;
     }
 
-    // Get the username of the user
+    //Get the username of the user
     public String getUsername() {
         return username;
     }
 
-    // Get the role of the user
+    //Get the role of the user
     public UserRole getRole() {
         return role;
     }
@@ -38,7 +38,7 @@ public class User implements VehicleObserver {
     public void update(String vehicleStatus) {
         System.out.println("User " + username + " notified: " + vehicleStatus);
 
-        // Logic based on user role and vehicle status
+        //Logic based on user role and vehicle status
         if (vehicleStatus.contains("Vehicle status changed to: AVAILABLE")) {
             if (role == UserRole.DRIVER) {
                 System.out.println("Driver " + username + " can view vehicle details.");
@@ -70,7 +70,7 @@ public class User implements VehicleObserver {
     public void reserveVehicle(Vehicle vehicle) {
         if (vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE && role == UserRole.MANAGER) {
             System.out.println("Manager " + username + " has reserved the vehicle.");
-            vehicle.setVehicleStatus(VehicleStatus.RESERVED); // Mark the vehicle as reserved
+            vehicle.setVehicleStatus(VehicleStatus.RESERVED); //Mark the vehicle as reserved
         } else {
             System.out.println("Manager " + username + " cannot reserve the vehicle.");
         }

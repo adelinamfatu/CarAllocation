@@ -21,7 +21,6 @@ public class Car extends Vehicle {
 
     /**
      * Retrieves the passenger capacity of the car.
-     *
      * @return The passenger capacity of the car.
      */
     public int getPassengerCapacity() {
@@ -30,7 +29,6 @@ public class Car extends Vehicle {
 
     /**
      * Sets the passenger capacity of the car.
-     *
      * @param passengerCapacity The new passenger capacity of the car.
      */
     public void setPassengerCapacity(int passengerCapacity) {

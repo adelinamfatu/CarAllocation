@@ -1,6 +1,7 @@
 package org.car.allocation.model;
 
 import jakarta.persistence.*;
+
 /**
  * The Truck class represents a truck object in the system. It extends the Vehicle class
  * and adds specific attributes for a truck, such as cargo capacity.
