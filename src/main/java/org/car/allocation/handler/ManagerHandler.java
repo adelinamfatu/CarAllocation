@@ -1,7 +1,7 @@
 package org.car.allocation.handler;
 
 import org.car.allocation.util.UserRole;
-import org.car.allocation.observer.User;
+import org.car.allocation.model.User;
 
 import java.util.Scanner;
 
