@@ -27,14 +27,12 @@ public abstract class Vehicle {
     @Column(nullable = false)
     protected String model;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    protected boolean isAvailable;
+    protected VehicleStatus vehicleStatus; // Using VehicleStatus enum
 
     @Column(nullable = false)
     protected double fuelLevel;
-
-    @Column(nullable = false)
-    protected boolean isInMaintenance;
 
     @Column(nullable = false)
     protected double mileage;
@@ -56,9 +54,14 @@ public abstract class Vehicle {
         this.model = model;
         this.fuelLevel = fuelLevel;
         this.engineType = engineType;
-        this.isAvailable = true;
-        this.isInMaintenance = false;
+        this.vehicleStatus = VehicleStatus.AVAILABLE; // Default status
         this.mileage = 0.0;
+    }
+
+    public Vehicle(String licensePlate, String model, double fuelLevel) {
+        this.licensePlate = licensePlate;
+        this.model = model;
+        this.fuelLevel = fuelLevel;
     }
 
     /**
@@ -93,22 +96,6 @@ public abstract class Vehicle {
         this.model = model;
     }
 
-    /**
-     * Checks if the vehicle is available for allocation.
-     * @return true if the vehicle is available, false otherwise.
-     */
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    /**
-     * Sets the availability of the vehicle and notifies observers of the change.
-     * @param available The new availability status of the vehicle.
-     */
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-        statusNotifier.notifyObservers("Availability changed to: " + available);
-    }
 
     /**
      * Retrieves the current fuel level of the vehicle.
@@ -128,19 +115,22 @@ public abstract class Vehicle {
     }
 
     /**
-     * Checks if the vehicle is in maintenance.
-     * @return true if the vehicle is in maintenance, false otherwise.
+     * Retrieves the current status of the vehicle.
+     *
+     * @return The current status (VehicleStatus) of the vehicle.
      */
-    public boolean isInMaintenance() {
-        return isInMaintenance;
+    public VehicleStatus getVehicleStatus() {
+        return vehicleStatus;
     }
 
     /**
-     * Sets the maintenance status of the vehicle.
-     * @param inMaintenance The new maintenance status of the vehicle.
+     * Sets the status of the vehicle and notifies observers of the change.
+     *
+     * @param vehicleStatus The new status of the vehicle.
      */
-    public void setInMaintenance(boolean inMaintenance) {
-        isInMaintenance = inMaintenance;
+    public void setVehicleStatus(VehicleStatus vehicleStatus) {
+        this.vehicleStatus = vehicleStatus;
+        statusNotifier.notifyObservers("Vehicle status changed to: " + vehicleStatus);
     }
 
     /**
@@ -161,6 +151,7 @@ public abstract class Vehicle {
 
     /**
      * Adds an observer to monitor the vehicle's status changes.
+     *
      * @param observer The observer to be added.
      */
     public void addObserver(VehicleObserver observer) {
@@ -169,6 +160,7 @@ public abstract class Vehicle {
 
     /**
      * Removes an observer from monitoring the vehicle's status changes.
+     *
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {

@@ -1,6 +1,7 @@
 package org.car.allocation.specification;
 
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.model.VehicleStatus;
 
 public class OperationableSpecification implements Specification<Vehicle> {
     private final double minFuelLevel;
@@ -11,8 +12,12 @@ public class OperationableSpecification implements Specification<Vehicle> {
 
     @Override
     public boolean isSatisfiedBy(Vehicle vehicle) {
-        return vehicle.isAvailable() && !vehicle.isInMaintenance() && vehicle.getFuelLevel() >= minFuelLevel;
+        // Verifici statusul vehiculului folosind enum-ul VehicleStatus
+        return vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE
+                && vehicle.getVehicleStatus() != VehicleStatus.IN_MAINTENANCE
+                && vehicle.getFuelLevel() >= minFuelLevel;
     }
+
 
     @Override
     public Specification<Vehicle> and(Specification<Vehicle> other) {
