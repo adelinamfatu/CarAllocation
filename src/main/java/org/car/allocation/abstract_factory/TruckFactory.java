@@ -13,8 +13,9 @@ public class TruckFactory implements VehicleFactory {
     private double cargoCapacity;
     private boolean hasRefrigerationUnit;
 
-    public TruckFactory(double cargoCapacity) {
+    public TruckFactory(double cargoCapacity,boolean hasRefrigerationUnit) {
         this.cargoCapacity = cargoCapacity;
+        this.hasRefrigerationUnit = hasRefrigerationUnit;
     }
 
     /**

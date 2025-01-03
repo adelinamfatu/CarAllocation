@@ -232,7 +232,21 @@ public class UniversalHandler {
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
 
-                TruckFactory truckFactory = new TruckFactory(cargoCapacity);
+                System.out.println(messages.getString("enter.hasRefrigerationUnit"));
+                String input = scanner.nextLine().trim().toLowerCase();
+                boolean hasRefrigerationUnit;
+
+                if (input.equals("yes") || input.equals("da")) {
+                    hasRefrigerationUnit = true;
+                } else if (input.equals("no") || input.equals("nu")) {
+                    hasRefrigerationUnit = false;
+                } else {
+                    System.out.println(messages.getString("invalid.input"));
+                    hasRefrigerationUnit = false;
+                }
+
+
+                TruckFactory truckFactory = new TruckFactory(cargoCapacity,hasRefrigerationUnit);
                 vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addTruck((Truck) vehicle);
                 System.out.println(messages.getString("truck.added.successfully"));
