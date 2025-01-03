@@ -55,6 +55,10 @@ public class Truck extends Vehicle {
         this.hasRefrigerationUnit = hasRefrigerationUnit;
     }
 
+    public double calculateLoadEfficiency() {
+        return cargoCapacity / fuelLevel;
+    }
+
     @Override
     public String toString() {
         return String.format("Truck [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Cargo Capacity: %.1f]",

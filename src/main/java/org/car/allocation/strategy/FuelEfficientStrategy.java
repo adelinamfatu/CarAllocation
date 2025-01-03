@@ -7,7 +7,6 @@ import org.car.allocation.specification.Specification;
 import org.car.allocation.util.EngineType;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implements the AllocationStrategy interface to allocate vehicles based on fuel efficiency.
@@ -28,7 +27,7 @@ public class FuelEfficientStrategy implements AllocationStrategy {
 
         List<Vehicle> filteredVehicles = availableVehicles.stream()
                 .filter(specification::isSatisfiedBy) //Filter based on the specification
-                .collect(Collectors.toList());
+                .toList();
 
         //Allocate the first available vehicle from the filtered list
         return filteredVehicles.stream()
