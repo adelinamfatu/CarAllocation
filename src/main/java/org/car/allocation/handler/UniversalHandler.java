@@ -32,7 +32,7 @@ public class UniversalHandler {
     public void handleLogin() {
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
-        System.out.print("Enter password: ");
+        System.out.println(messages.getString("login.password.prompt"));
         String password = scanner.nextLine();
 
         User user = userRepository.findByUsername(username).orElse(null);
@@ -42,30 +42,37 @@ public class UniversalHandler {
             showPermissions();
             showOptions();
         } else {
-            System.out.println("Invalid username or password. Please try again.");
+            System.out.println(messages.getString("sigin.user.invalid"));
         }
     }
 
     public void handleSignIn() {
-        System.out.println("Creating a new user...");
-        System.out.print("Enter first name: ");
+        System.out.println(messages.getString("signin.invalid"));
+
+        System.out.println(messages.getString("signin.firstname"));
         String firstName = scanner.nextLine();
-        System.out.print("Enter last name: ");
+
+        System.out.println(messages.getString("signin.lastname"));
         String lastName = scanner.nextLine();
-        System.out.print("Enter email: ");
+
+        System.out.println(messages.getString("signin.email"));
         String email = scanner.nextLine();
-        System.out.print("Enter phone number: ");
+
+        System.out.println(messages.getString("signin.phone_number"));
         String phoneNumber = scanner.nextLine();
-        System.out.print("Enter username: ");
+
+        System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
-        System.out.print("Enter password: ");
+
+        System.out.println(messages.getString("login.password.prompt"));
         String password = scanner.nextLine();
+
 
         UserService userService = new UserService();
         UserRole role = UserRole.DRIVER;
         userService.createUser(firstName, lastName, email, phoneNumber, username, password, role);
 
-        System.out.println("User created successfully! You can now log in.");
+        System.out.println("sigin.user.created.succesfully");
         handleLogin();
     }
 
