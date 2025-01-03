@@ -1,9 +1,6 @@
 package org.car.allocation;
 
-import org.car.allocation.handler.AdminHandler;
-import org.car.allocation.handler.ManagerHandler;
 import org.car.allocation.handler.UniversalHandler;
-import org.car.allocation.handler.UserHandler;
 import org.car.allocation.util.HibernateUtil;
 import org.car.allocation.util.UserRole;
 import org.hibernate.Session;
