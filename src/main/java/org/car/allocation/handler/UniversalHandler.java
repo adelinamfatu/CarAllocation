@@ -140,11 +140,28 @@ public class UniversalHandler {
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
-        VehicleFactory factory;
+        // Common vehicle properties
+        System.out.println("Enter license plate:");
+        String licensePlate = scanner.nextLine();
+
+        System.out.println("Enter model:");
+        String model = scanner.nextLine();
+
+        System.out.println("Enter fuel level:");
+        double fuelLevel = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Enter max speed:");
+        double maxSpeed = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
+        String engineType = scanner.nextLine().toUpperCase();
+
         Vehicle vehicle;
 
         switch (typeChoice) {
-            case 1:
+            case 1: // Car
                 System.out.println("Enter passenger capacity for the car:");
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
@@ -152,54 +169,20 @@ public class UniversalHandler {
                 System.out.println("Enter comfort level for the car:");
                 int comfortLevel = scanner.nextInt();
                 scanner.nextLine();
-                factory = new CarFactory(passengerCapacity, comfortLevel);
 
-                System.out.println("Enter license plate:");
-                String carLicensePlate = scanner.nextLine();
-
-                System.out.println("Enter model:");
-                String carModel = scanner.nextLine();
-
-                System.out.println("Enter fuel level:");
-                double carFuelLevel = scanner.nextDouble();
-                scanner.nextLine();
-
-                System.out.println("Enter max speed level:");
-                double carMaxSpeed = scanner.nextDouble();
-                scanner.nextLine();
-
-                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
-                String carEngineType = scanner.nextLine().toUpperCase();
-
-                vehicle = factory.createVehicle(carLicensePlate, carModel, carFuelLevel, carMaxSpeed, EngineType.valueOf(carEngineType));
+                CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
+                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
                 vehicleService.addCar((Car) vehicle);
                 System.out.println("Car added successfully!");
                 break;
 
-            case 2:
+            case 2: // Truck
                 System.out.println("Enter cargo capacity for the truck:");
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
-                factory = new TruckFactory(cargoCapacity);
 
-                System.out.println("Enter license plate:");
-                String truckLicensePlate = scanner.nextLine();
-
-                System.out.println("Enter model:");
-                String truckModel = scanner.nextLine();
-
-                System.out.println("Enter fuel level:");
-                double truckFuelLevel = scanner.nextDouble();
-                scanner.nextLine();
-
-                System.out.println("Enter max speed level:");
-                double truckMaxSpeed = scanner.nextDouble();
-                scanner.nextLine();
-
-                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
-                String truckEngineType = scanner.nextLine().toUpperCase();
-
-                vehicle = factory.createVehicle(truckLicensePlate, truckModel, truckFuelLevel, truckMaxSpeed, EngineType.valueOf(truckEngineType));
+                TruckFactory truckFactory = new TruckFactory(cargoCapacity);
+                vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
                 vehicleService.addTruck((Truck) vehicle);
                 System.out.println("Truck added successfully!");
                 break;
