@@ -32,7 +32,6 @@ public class User implements VehicleObserver {
 
     @Column(name = "phone_number")
     private String phoneNumber;
-
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -47,8 +46,6 @@ public class User implements VehicleObserver {
     @JoinColumn(name = "truck_id", referencedColumnName = "id", nullable = true)
     private Truck truck;
 
-    public User(String username, UserRole admin) {}
-
     public User(UserRole role, String firstName, String lastName, String email, String phoneNumber, String username, String password, Car car, Truck truck) {
         this.role = role;
         this.firstName = firstName;
@@ -60,6 +57,9 @@ public class User implements VehicleObserver {
         this.car = car;
         this.truck = truck;
     }
+
+    public User(String username, UserRole admin) {}
+
 
     public Long getId() {
         return id;
