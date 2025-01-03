@@ -54,14 +54,14 @@ public abstract class Vehicle {
 
     public Vehicle () {}
 
-    public Vehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
+    public Vehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double mileage) {
         this.licensePlate = licensePlate;
         this.model = model;
         this.fuelLevel = fuelLevel;
         this.engineType = engineType;
         this.maxSpeed = maxSpeed;
         this.vehicleStatus = VehicleStatus.AVAILABLE; //Default status
-        this.mileage = 0.0;
+        this.mileage = mileage;
     }
 
     /**

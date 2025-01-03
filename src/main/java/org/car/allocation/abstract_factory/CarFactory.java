@@ -29,7 +29,7 @@ public class CarFactory implements VehicleFactory {
      *         fuel level, and passenger capacity.
      */
     @Override
-    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
-        return new Car(licensePlate, model, fuelLevel, maxSpeed, engineType, passengerCapacity, comfortLevel);
+    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double mileage) {
+        return new Car(licensePlate, model, fuelLevel, maxSpeed, engineType, passengerCapacity, comfortLevel, mileage);
     }
 }

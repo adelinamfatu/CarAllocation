@@ -25,8 +25,8 @@ public class Truck extends Vehicle {
      */
     public Truck() {}
 
-    public Truck(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double cargoCapacity, boolean hasRefrigerationUnit) {
-        super(licensePlate, model, fuelLevel, maxSpeed, engineType);
+    public Truck(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double cargoCapacity, boolean hasRefrigerationUnit, double mileage) {
+        super(licensePlate, model, fuelLevel, maxSpeed, engineType, mileage);
         this.cargoCapacity = cargoCapacity;
         this.hasRefrigerationUnit = hasRefrigerationUnit;
     }
@@ -58,6 +58,6 @@ public class Truck extends Vehicle {
     @Override
     public String toString() {
         return String.format("Truck [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Cargo Capacity: %.1f]",
-                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), cargoCapacity);
+                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), cargoCapacity, getMileage());
     }
 }

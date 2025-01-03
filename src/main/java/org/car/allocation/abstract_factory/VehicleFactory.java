@@ -22,5 +22,6 @@ public interface VehicleFactory {
                           String model,
                           double fuelLevel,
                           double maxSpeed,
-                          EngineType engineType);
+                          EngineType engineType,
+                          double mileage);
 }

@@ -18,8 +18,8 @@ public class Car extends Vehicle {
 
     public Car() {}
 
-    public Car(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, int passengerCapacity, int comfortLevel) {
-        super(licensePlate, model, fuelLevel, maxSpeed, engineType);
+    public Car(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, int passengerCapacity, int comfortLevel, double mileage) {
+        super(licensePlate, model, fuelLevel, maxSpeed, engineType, mileage);
         this.passengerCapacity = passengerCapacity;
         this.comfortLevel = comfortLevel;
     }
@@ -54,6 +54,6 @@ public class Car extends Vehicle {
     @Override
     public String toString() {
         return String.format("Car [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Passenger Capacity: %d]",
-                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), passengerCapacity);
+                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), passengerCapacity, getMileage());
     }
 }

@@ -27,7 +27,7 @@ public class TruckFactory implements VehicleFactory {
      *         fuel level, and cargo capacity.
      */
     @Override
-    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
-        return new Truck(licensePlate, model, fuelLevel, maxSpeed, engineType, cargoCapacity, hasRefrigerationUnit);
+    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double mileage) {
+        return new Truck(licensePlate, model, fuelLevel, maxSpeed, engineType, cargoCapacity, hasRefrigerationUnit, mileage);
     }
 }
