@@ -5,22 +5,25 @@ import org.car.allocation.model.Truck;
 import java.util.List;
 
 /**
- * Implements the AllocationStrategy interface to prioritize trucks for cargo transport tasks.
- * It allocates a truck that has a positive cargo capacity, suitable for freight tasks.
+ * Implements the AllocationStrategy interface to prioritize trucks based on their cargo capacity.
+ * This strategy selects the truck with the highest cargo capacity from the list of available trucks,
+ * optimizing for the ability to transport the largest possible load.
  */
 public class CargoPriorityStrategy implements AllocationStrategy {
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
+        Truck selectedTruck = null;
+        double maxCargoCapacity = 0.0;
+
         for (Vehicle vehicle : availableVehicles) {
             if (vehicle instanceof Truck) {
                 Truck truck = (Truck) vehicle;
-                // Assume that only trucks with positive cargo capacity are eligible
-                if (truck.getCargoCapacity() > 0) {
-                    return truck;
+                if (truck.getCargoCapacity() > maxCargoCapacity) {
+                    maxCargoCapacity = truck.getCargoCapacity();
+                    selectedTruck = truck;
                 }
             }
         }
-        // Return null if no suitable truck is available
-        return null;
+        return selectedTruck;
     }
 }

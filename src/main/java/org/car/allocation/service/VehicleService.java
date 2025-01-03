@@ -1,4 +1,5 @@
 package org.car.allocation.service;
+import org.car.allocation.strategy.AllocationStrategy;
 
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
@@ -67,5 +68,10 @@ public class VehicleService<T extends Vehicle> {
 
     public void updateTruck(Truck truck) { truckRepository.update(truck); }
 
+
+    // STRATEGY
+    public Vehicle allocateVehicle(List<Vehicle> availableVehicles, AllocationStrategy strategy) {
+        return strategy.allocate(availableVehicles);
+    }
 
 }

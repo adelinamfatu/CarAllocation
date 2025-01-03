@@ -35,4 +35,10 @@ public class Car extends Vehicle {
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Car [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Passenger Capacity: %d]",
+                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), passengerCapacity);
+    }
 }
