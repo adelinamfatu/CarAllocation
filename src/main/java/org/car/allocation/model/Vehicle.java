@@ -177,4 +177,12 @@ public abstract class Vehicle {
     public void removeObserver(VehicleObserver observer) {
         statusNotifier.removeObserver(observer);
     }
+
+    //
+    public void releaseVehicle(double newMileage) {
+        setMileage(newMileage);
+        setVehicleStatus(VehicleStatus.AVAILABLE);
+        statusNotifier.notifyObservers("Vehicle released and available with new mileage: " + newMileage);
+    }
+
 }
