@@ -33,14 +33,32 @@ public class User implements VehicleObserver {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "username", unique = true, nullable = false)
+    private String username;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "car_id", referencedColumnName = "id", nullable = true)
+    private Car car;
+
+    @ManyToOne
+    @JoinColumn(name = "truck_id", referencedColumnName = "id", nullable = true)
+    private Truck truck;
+
     public User(String username, UserRole admin) {}
 
-    public User(UserRole role, String firstName, String lastName, String email, String phoneNumber) {
+    public User(UserRole role, String firstName, String lastName, String email, String phoneNumber, String username, String password, Car car, Truck truck) {
         this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.username = username;
+        this.password = password;
+        this.car = car;
+        this.truck = truck;
     }
 
     public Long getId() {
@@ -91,6 +109,37 @@ public class User implements VehicleObserver {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public Truck getTruck() {
+        return truck;
+    }
+
+    public void setTruck(Truck truck) {
+        this.truck = truck;
+    }
 
     /**
      * This method is called when the vehicle's status changes. It grants or denies access

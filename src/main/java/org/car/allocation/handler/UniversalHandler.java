@@ -160,6 +160,10 @@ public class UniversalHandler {
         double maxSpeed = scanner.nextDouble();
         scanner.nextLine();
 
+        System.out.println("Enter mileage speed:");
+        double mileage = scanner.nextDouble();
+        scanner.nextLine();
+
         System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
         String engineType = scanner.nextLine().toUpperCase();
 
@@ -176,7 +180,7 @@ public class UniversalHandler {
                 scanner.nextLine();
 
                 CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
-                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
+                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType),mileage);
                 vehicleService.addCar((Car) vehicle);
                 System.out.println("Car added successfully!");
                 break;
