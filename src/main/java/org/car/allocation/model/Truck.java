@@ -47,6 +47,14 @@ public class Truck extends Vehicle {
         this.cargoCapacity = cargoCapacity;
     }
 
+    public boolean hasRefrigerationUnit() {
+        return hasRefrigerationUnit;
+    }
+
+    public void setHasRefrigerationUnit(boolean hasRefrigerationUnit) {
+        this.hasRefrigerationUnit = hasRefrigerationUnit;
+    }
+
     @Override
     public String toString() {
         return String.format("Truck [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Cargo Capacity: %.1f]",

@@ -97,7 +97,6 @@ public abstract class Vehicle {
         this.model = model;
     }
 
-
     /**
      * Retrieves the current fuel level of the vehicle.
      * @return The fuel level of the vehicle.
@@ -112,6 +111,14 @@ public abstract class Vehicle {
      */
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;
+    }
+
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
     /**
