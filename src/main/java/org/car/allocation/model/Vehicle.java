@@ -64,6 +64,7 @@ public abstract class Vehicle {
      * Retrieves the license plate of the vehicle.
      * @return The license plate of the vehicle.
      */
+    public int getId() { return id; }
     public String getLicensePlate() {
         return licensePlate;
     }

@@ -5,12 +5,20 @@ import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.VehicleRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
+
+    public List<Vehicle> getAllVehicles() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.addAll(carRepository.findAll());
+        vehicles.addAll(truckRepository.findAll());
+        return vehicles;
+    }
 
     public void addCar(Car car) {
         carRepository.save(car);
@@ -35,4 +43,5 @@ public class VehicleService<T extends Vehicle> {
     public List<Car> getAllCars() {
         return carRepository.findAll();
     }
+    public List<Truck> getAllTrucks() { return truckRepository.findAll(); }
 }

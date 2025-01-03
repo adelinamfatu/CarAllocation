@@ -12,9 +12,11 @@ import org.car.allocation.service.VehicleService;
 import org.car.allocation.model.Vehicle;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.text.MessageFormat;
+import java.util.stream.Collectors;
 
 public class UniversalHandler {
     private final Scanner scanner;
@@ -197,15 +199,46 @@ public class UniversalHandler {
     }
 
     private void viewAllVehicles() {
-        System.out.println("\nCars:");
+        System.out.println("\nAll Vehicles:");
+
+        // Display all cars grouped by engine type
+        System.out.println("Cars:");
         List<Car> cars = vehicleService.getAllCars();
-        for (Car car : cars) {
-            System.out.println("- License Plate: " + car.getLicensePlate() +
-                    ", Model: " + car.getModel() +
-                    ", Fuel Level: " + car.getFuelLevel() +
-                    ", Passenger Capacity: " + car.getPassengerCapacity() +
-                    ", Engine Type: " + car.getEngineType());
+        if (cars.isEmpty()) {
+            System.out.println("No cars available.");
+        } else {
+            Map<EngineType, List<Car>> groupedCars = cars.stream()
+                    .collect(Collectors.groupingBy(Car::getEngineType));
+            groupedCars.forEach((engineType, carList) -> {
+                System.out.println("- Engine Type: " + engineType + ":");
+                carList.forEach(car -> {
+                    System.out.println("  > ID: " + car.getId() + " - License Plate: " + car.getLicensePlate() +
+                            ", Model: " + car.getModel() +
+                            ", Fuel Level: " + car.getFuelLevel() +
+                            ", Passenger Capacity: " + car.getPassengerCapacity());
+                });
+            });
+        }
+
+        // Display all trucks grouped by engine type
+        System.out.println("Trucks:");
+        List<Truck> trucks = vehicleService.getAllTrucks();
+        if (trucks.isEmpty()) {
+            System.out.println("No trucks available.");
+        } else {
+            Map<EngineType, List<Truck>> groupedTrucks = trucks.stream()
+                    .collect(Collectors.groupingBy(Truck::getEngineType));
+            groupedTrucks.forEach((engineType, truckList) -> {
+                System.out.println("- Engine Type: " + engineType + ":");
+                truckList.forEach(truck -> {
+                    System.out.println("  > ID: " + truck.getId() + " - License Plate: " + truck.getLicensePlate() +
+                            ", Model: " + truck.getModel() +
+                            ", Fuel Level: " + truck.getFuelLevel() +
+                            ", Cargo Capacity: " + truck.getCargoCapacity());
+                });
+            });
         }
     }
+
 }
 
