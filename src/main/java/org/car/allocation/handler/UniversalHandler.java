@@ -11,10 +11,7 @@ import org.car.allocation.util.UserRole;
 import org.car.allocation.service.VehicleService;
 import org.car.allocation.model.Vehicle;
 
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
@@ -83,9 +80,12 @@ public class UniversalHandler {
                         addNewVehicle();
                         break;
                     case 4:
-                        deleteVehicle();
+                        updateVehicle();
                         break;
                     case 5:
+                        deleteVehicle();
+                        break;
+                    case 6:
                         backToMenu = true;
                         break;
                     default:
@@ -263,6 +263,101 @@ public class UniversalHandler {
             }
         } else {
             System.out.println("Invalid option. Please select 1 for Car or 2 for Truck.");
+        }
+    }
+
+    private void updateVehicle() {
+        System.out.println("\nWhat type of vehicle would you like to UPDATE?");
+        System.out.println("1. Car");
+        System.out.println("2. Truck");
+        int typeChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (typeChoice != 1 && typeChoice != 2) {
+            System.out.println("Invalid option. Please select 1 for Car or 2 for Truck.");
+            return;
+        }
+
+        System.out.println("Enter the ID of the vehicle to update:");
+        int vehicleId;
+        try {
+            vehicleId = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Invalid input for ID. Please enter a valid integer.");
+            scanner.next(); // clear scanner buffer
+            return;
+        }
+
+        try {
+            Optional<? extends Vehicle> vehicleOptional = (typeChoice == 1) ?
+                    vehicleService.findCarById(vehicleId) :
+                    vehicleService.findTruckById(vehicleId);
+
+            if (!vehicleOptional.isPresent()) {
+                System.out.println("No vehicle found with ID: " + vehicleId);
+                return;
+            }
+
+            Vehicle vehicle = vehicleOptional.get();
+
+            System.out.println("Select the property to update:");
+            String[] properties = (vehicle instanceof Car) ?
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity"} :
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity"};
+
+            for (int i = 0; i < properties.length; i++) {
+                System.out.printf("%d. %s\n", (i + 1), properties[i]);
+            }
+
+            int propertyChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (propertyChoice < 1 || propertyChoice > properties.length) {
+                System.out.println("Invalid property choice.");
+                return;
+            }
+
+            System.out.println("Enter new value for " + properties[propertyChoice - 1] + ":");
+            String newValue = scanner.nextLine();
+
+            // Apply updates based on choice
+            updateVehicleProperty(vehicle, propertyChoice, newValue);
+
+            if (vehicle instanceof Car) {
+                vehicleService.updateCar((Car) vehicle);
+            } else if (vehicle instanceof Truck) {
+                vehicleService.updateTruck((Truck) vehicle);
+            }
+
+            System.out.println("Vehicle updated successfully:\n" + vehicle);
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void updateVehicleProperty(Vehicle vehicle, int propertyChoice, String newValue) {
+        switch (propertyChoice) {
+            case 1:
+                vehicle.setLicensePlate(newValue);
+                break;
+            case 2:
+                vehicle.setModel(newValue);
+                break;
+            case 3:
+                vehicle.setFuelLevel(Double.parseDouble(newValue));
+                break;
+            case 4:
+                vehicle.setEngineType(EngineType.valueOf(newValue.toUpperCase()));
+                break;
+            case 5:
+                if (vehicle instanceof Car) {
+                    ((Car)vehicle).setPassengerCapacity(Integer.parseInt(newValue));
+                } else if (vehicle instanceof Truck) {
+                    ((Truck)vehicle).setCargoCapacity(Double.parseDouble(newValue));
+                }
+                break;
         }
     }
 

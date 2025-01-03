@@ -63,5 +63,9 @@ public class VehicleService<T extends Vehicle> {
         return false;
     }
 
+    public void updateCar(Car car) { carRepository.update(car); }
+
+    public void updateTruck(Truck truck) { truckRepository.update(truck); }
+
 
 }
