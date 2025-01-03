@@ -1,10 +1,10 @@
 package org.car.allocation;
 
 import org.car.allocation.handler.UniversalHandler;
-import org.car.allocation.util.HibernateUtil;
-import org.car.allocation.util.UserRole;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.car.allocation.util.HibernateUtil;
+import org.car.allocation.util.UserRole;
 
 import java.util.Scanner;
 
@@ -32,28 +32,69 @@ public class Main {
 
         while (!exit) {
             System.out.println("\nPlease choose an option:");
-            System.out.println("1. Log in as a USER (Driver)");
-            System.out.println("2. Log in as a MANAGER");
-            System.out.println("3. Log in as an ADMIN");
-            System.out.println("4. Exit");
+            System.out.println("1. Login");
+            System.out.println("2. Sign In (Create a new user)");
+            System.out.println("3. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
-                    new UniversalHandler(scanner, UserRole.DRIVER).handleLogin();
+                    // Login
+                    System.out.println("Choose your role:");
+                    System.out.println("1. Driver");
+                    System.out.println("2. Manager");
+                    System.out.println("3. Admin");
+                    int roleChoice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    switch (roleChoice) {
+                        case 1:
+                            new UniversalHandler(scanner, UserRole.DRIVER).handleLogin();
+                            break;
+                        case 2:
+                            new UniversalHandler(scanner, UserRole.MANAGER).handleLogin();
+                            break;
+                        case 3:
+                            new UniversalHandler(scanner, UserRole.ADMIN).handleLogin();
+                            break;
+                        default:
+                            System.out.println("Invalid role selected.");
+                            break;
+                    }
                     break;
+
                 case 2:
-                    new UniversalHandler(scanner, UserRole.MANAGER).handleLogin();
+                    // Sign In (Create new user)
+                    System.out.println("Choose your role for Sign In:");
+                    System.out.println("1. Driver");
+                    System.out.println("2. Manager");
+                    System.out.println("3. Admin");
+                    roleChoice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    switch (roleChoice) {
+                        case 1:
+                            new UniversalHandler(scanner, UserRole.DRIVER).handleSignIn();
+                            break;
+                        case 2:
+                            new UniversalHandler(scanner, UserRole.MANAGER).handleSignIn();
+                            break;
+                        case 3:
+                            new UniversalHandler(scanner, UserRole.ADMIN).handleSignIn();
+                            break;
+                        default:
+                            System.out.println("Invalid role selected.");
+                            break;
+                    }
                     break;
+
                 case 3:
-                    new UniversalHandler(scanner, UserRole.ADMIN).handleLogin();
-                    break;
-                case 4:
                     System.out.println("Exiting the system...");
                     exit = true;
                     break;
+
                 default:
                     System.out.println("Invalid option, please try again.");
                     break;

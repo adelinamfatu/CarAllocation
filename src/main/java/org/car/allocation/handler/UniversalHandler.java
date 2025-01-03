@@ -5,6 +5,8 @@ import org.car.allocation.abstract_factory.TruckFactory;
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.User;
+import org.car.allocation.repository.UserRepository;
+import org.car.allocation.service.UserService;
 import org.car.allocation.util.EngineType;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.service.VehicleService;
@@ -20,6 +22,7 @@ public class UniversalHandler {
     private final UserRole userRole;
     private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
+    private final UserRepository userRepository = new UserRepository();
 
     public UniversalHandler(Scanner scanner, UserRole role) {
         this.scanner = scanner;
@@ -29,9 +32,44 @@ public class UniversalHandler {
     public void handleLogin() {
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
-        User user = new User(username, userRole);
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
 
-        System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, userRole));
+        User user = userRepository.findByUsername(username).orElse(null);
+
+        if (user != null && user.getPassword().equals(password)) {
+            System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, userRole));
+            showPermissions();
+            showOptions();
+        } else {
+            System.out.println("Invalid username or password. Please try again.");
+        }
+    }
+
+    public void handleSignIn() {
+        System.out.println("Creating a new user...");
+        System.out.print("Enter first name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phoneNumber = scanner.nextLine();
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        UserService userService = new UserService();
+        UserRole role = UserRole.DRIVER;
+        userService.createUser(firstName, lastName, email, phoneNumber, username, password, role);
+
+        System.out.println("User created successfully! You can now log in.");
+        handleLogin();
+    }
+
+    private void showPermissions() {
         switch (userRole) {
             case DRIVER:
                 System.out.println(messages.getString("permissions.driver"));
@@ -43,8 +81,6 @@ public class UniversalHandler {
                 System.out.println(messages.getString("permissions.admin"));
                 break;
         }
-
-        showOptions();
     }
 
     private void showOptions() {

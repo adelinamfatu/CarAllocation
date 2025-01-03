@@ -61,6 +61,8 @@ public class User implements VehicleObserver {
 
     public User(String username, UserRole admin) {}
 
+    public User() {
+    }
 
     public Long getId() {
         return id;
