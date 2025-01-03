@@ -39,23 +39,27 @@ public abstract class Vehicle {
     @Column(nullable = false)
     protected double mileage;
 
+    @Column(nullable = false)
+    private double maxSpeed;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    protected EngineType engineType;
+
     /**
      * A transient notifier for vehicle status changes, used to implement the observer pattern.
      */
     @Transient
     private VehicleStatusNotifier statusNotifier = new VehicleStatusNotifier();
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    protected EngineType engineType;
-
     public Vehicle () {}
 
-    public Vehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
+    public Vehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
         this.licensePlate = licensePlate;
         this.model = model;
         this.fuelLevel = fuelLevel;
         this.engineType = engineType;
+        this.maxSpeed = maxSpeed;
         this.vehicleStatus = VehicleStatus.AVAILABLE; //Default status
         this.mileage = 0.0;
     }

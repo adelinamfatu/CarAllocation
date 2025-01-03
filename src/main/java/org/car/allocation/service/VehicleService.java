@@ -68,10 +68,8 @@ public class VehicleService<T extends Vehicle> {
 
     public void updateTruck(Truck truck) { truckRepository.update(truck); }
 
-
     // STRATEGY
     public Vehicle allocateVehicle(List<Vehicle> availableVehicles, AllocationStrategy strategy) {
         return strategy.allocate(availableVehicles);
     }
-
 }

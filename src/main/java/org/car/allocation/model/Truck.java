@@ -16,20 +16,23 @@ public class Truck extends Vehicle {
     @Column(nullable = false)
     private double cargoCapacity;
 
+    @Column(nullable = false)
+    private boolean hasRefrigerationUnit;
+
     /**
      * Default constructor for Truck.
      * Initializes a new instance of the Truck class with default values.
      */
     public Truck() {}
 
-    public Truck(String licensePlate, String model, double fuelLevel, EngineType engineType, double cargoCapacity) {
-        super(licensePlate, model, fuelLevel, engineType);
+    public Truck(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, double cargoCapacity, boolean hasRefrigerationUnit) {
+        super(licensePlate, model, fuelLevel, maxSpeed, engineType);
         this.cargoCapacity = cargoCapacity;
+        this.hasRefrigerationUnit = hasRefrigerationUnit;
     }
 
     /**
      * Retrieves the cargo capacity of the truck.
-     *
      * @return The cargo capacity of the truck.
      */
     public double getCargoCapacity() {
@@ -38,7 +41,6 @@ public class Truck extends Vehicle {
 
     /**
      * Sets the cargo capacity of the truck.
-     *
      * @param cargoCapacity The new cargo capacity of the truck.
      */
     public void setCargoCapacity(double cargoCapacity) {

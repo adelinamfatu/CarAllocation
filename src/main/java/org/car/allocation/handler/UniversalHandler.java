@@ -24,7 +24,6 @@ public class UniversalHandler {
     private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
 
-
     public UniversalHandler(Scanner scanner, UserRole role) {
         this.scanner = scanner;
         this.userRole = role;
@@ -77,7 +76,6 @@ public class UniversalHandler {
                         viewAllVehicles();
                         break;
                     case 2:
-                        // Implement view vehicle status logic
                         break;
                     case 3:
                         addNewVehicle();
@@ -101,13 +99,11 @@ public class UniversalHandler {
             } else if (userRole == UserRole.MANAGER) {
                 switch (choice) {
                     case 1:
-                        // Implement reserve vehicle logic
                         break;
                     case 2:
                         viewAllVehicles();
                         break;
                     case 3:
-                        // Implement view vehicle status logic
                         break;
                     case 4:
                         backToMenu = true;
@@ -122,10 +118,8 @@ public class UniversalHandler {
                         viewAllVehicles();
                         break;
                     case 2:
-                        // Implement reserve vehicle logic
                         break;
                     case 3:
-                        // Implement view reservation history logic
                         break;
                     case 4:
                         backToMenu = true;
@@ -154,7 +148,11 @@ public class UniversalHandler {
                 System.out.println("Enter passenger capacity for the car:");
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
-                factory = new CarFactory(passengerCapacity);
+
+                System.out.println("Enter comfort level for the car:");
+                int comfortLevel = scanner.nextInt();
+                scanner.nextLine();
+                factory = new CarFactory(passengerCapacity, comfortLevel);
 
                 System.out.println("Enter license plate:");
                 String carLicensePlate = scanner.nextLine();
@@ -166,10 +164,14 @@ public class UniversalHandler {
                 double carFuelLevel = scanner.nextDouble();
                 scanner.nextLine();
 
-                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC):");
+                System.out.println("Enter max speed level:");
+                double carMaxSpeed = scanner.nextDouble();
+                scanner.nextLine();
+
+                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
                 String carEngineType = scanner.nextLine().toUpperCase();
 
-                vehicle = factory.createVehicle(carLicensePlate, carModel, carFuelLevel, EngineType.valueOf(carEngineType));
+                vehicle = factory.createVehicle(carLicensePlate, carModel, carFuelLevel, carMaxSpeed, EngineType.valueOf(carEngineType));
                 vehicleService.addCar((Car) vehicle);
                 System.out.println("Car added successfully!");
                 break;
@@ -190,10 +192,14 @@ public class UniversalHandler {
                 double truckFuelLevel = scanner.nextDouble();
                 scanner.nextLine();
 
-                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC):");
+                System.out.println("Enter max speed level:");
+                double truckMaxSpeed = scanner.nextDouble();
+                scanner.nextLine();
+
+                System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
                 String truckEngineType = scanner.nextLine().toUpperCase();
 
-                vehicle = factory.createVehicle(truckLicensePlate, truckModel, truckFuelLevel, EngineType.valueOf(truckEngineType));
+                vehicle = factory.createVehicle(truckLicensePlate, truckModel, truckFuelLevel, truckMaxSpeed, EngineType.valueOf(truckEngineType));
                 vehicleService.addTruck((Truck) vehicle);
                 System.out.println("Truck added successfully!");
                 break;
@@ -207,7 +213,7 @@ public class UniversalHandler {
     private void viewAllVehicles() {
         System.out.println("\nAll Vehicles:");
 
-        // Display all cars grouped by engine type
+        //Display all cars grouped by engine type
         System.out.println("Cars:");
         List<Car> cars = vehicleService.getAllCars();
         if (cars.isEmpty()) {
@@ -226,7 +232,7 @@ public class UniversalHandler {
             });
         }
 
-        // Display all trucks grouped by engine type
+        //Display all trucks grouped by engine type
         System.out.println("Trucks:");
         List<Truck> trucks = vehicleService.getAllTrucks();
         if (trucks.isEmpty()) {
@@ -291,7 +297,7 @@ public class UniversalHandler {
             scanner.nextLine();
         } catch (Exception e) {
             System.out.println("Invalid input for ID. Please enter a valid integer.");
-            scanner.next(); // clear scanner buffer
+            scanner.next(); //Clear scanner buffer
             return;
         }
 
@@ -327,7 +333,7 @@ public class UniversalHandler {
             System.out.println("Enter new value for " + properties[propertyChoice - 1] + ":");
             String newValue = scanner.nextLine();
 
-            // Apply updates based on choice
+            //Apply updates based on choice
             updateVehicleProperty(vehicle, propertyChoice, newValue);
 
             if (vehicle instanceof Car) {
@@ -367,10 +373,9 @@ public class UniversalHandler {
         }
     }
 
-
-    // STRATEGY
+    //STRATEGY
     private void allocateVehicle() {
-        List<Vehicle> availableVehicles = vehicleService.getAllVehicles(); // Presupunem că această metodă există și returnează toate vehiculele disponibile.
+        List<Vehicle> availableVehicles = vehicleService.getAllVehicles();
         System.out.println("Choose an allocation strategy:");
         System.out.println("1. Fuel Efficiency");
         System.out.println("2. Cargo Priority");

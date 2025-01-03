@@ -10,9 +10,8 @@ import java.util.List;
  * a load capacity-based vehicle allocation strategy.
  * It allocates trucks based on whether they can meet or exceed a specified cargo capacity.
  */
-
 public class LoadCapacityStrategy implements AllocationStrategy {
-    private double requiredCapacity; // Required capacity in kg
+    private double requiredCapacity; //Required capacity in kg
 
     /**
      * Constructor to set the required cargo capacity.

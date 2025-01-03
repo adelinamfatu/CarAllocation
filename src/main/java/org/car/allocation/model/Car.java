@@ -13,11 +13,15 @@ public class Car extends Vehicle {
     @Column(nullable = false)
     private int passengerCapacity;
 
+    @Column(nullable = false, columnDefinition = "TINYINT CHECK (comfortLevel BETWEEN 1 AND 10)")
+    private int comfortLevel;
+
     public Car() {}
 
-    public Car(String licensePlate, String model, double fuelLevel, EngineType engineType, int passengerCapacity) {
-        super(licensePlate, model, fuelLevel, engineType);
+    public Car(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType, int passengerCapacity, int comfortLevel) {
+        super(licensePlate, model, fuelLevel, maxSpeed, engineType);
         this.passengerCapacity = passengerCapacity;
+        this.comfortLevel = comfortLevel;
     }
 
     /**
@@ -34,6 +38,17 @@ public class Car extends Vehicle {
      */
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
+    }
+
+    public int getComfortLevel() {
+        return comfortLevel;
+    }
+
+    public void setComfortLevel(int comfortLevel) {
+        if (comfortLevel < 1 || comfortLevel > 10) {
+            throw new IllegalArgumentException("Comfort level must be between 1 and 10.");
+        }
+        this.comfortLevel = comfortLevel;
     }
 
     @Override

@@ -12,9 +12,11 @@ import org.car.allocation.util.EngineType;
  */
 public class CarFactory implements VehicleFactory {
     private int passengerCapacity;
+    private int comfortLevel;
 
-    public CarFactory(int passengerCapacity) {
+    public CarFactory(int passengerCapacity, int comfortLevel) {
         this.passengerCapacity = passengerCapacity;
+        this.comfortLevel = comfortLevel;
     }
 
     /**
@@ -27,7 +29,7 @@ public class CarFactory implements VehicleFactory {
      *         fuel level, and passenger capacity.
      */
     @Override
-    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
-        return new Car(licensePlate, model, fuelLevel,engineType, passengerCapacity);
+    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
+        return new Car(licensePlate, model, fuelLevel, maxSpeed, engineType, passengerCapacity, comfortLevel);
     }
 }

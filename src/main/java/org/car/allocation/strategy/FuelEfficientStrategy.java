@@ -11,10 +11,10 @@ public class FuelEfficientStrategy implements AllocationStrategy {
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
         Vehicle selectedVehicle = null;
-        double maxEfficiency = 0.0; // Presuming efficiency is calculated as distance traveled per unit of fuel
+        double maxEfficiency = 0.0; //Presuming efficiency is calculated as distance traveled per unit of fuel
 
         for (Vehicle vehicle : availableVehicles) {
-            double efficiency = calculateFuelEfficiency(vehicle); // Method to calculate efficiency
+            double efficiency = calculateFuelEfficiency(vehicle); //Method to calculate efficiency
             if (efficiency > maxEfficiency) {
                 maxEfficiency = efficiency;
                 selectedVehicle = vehicle;
@@ -29,7 +29,7 @@ public class FuelEfficientStrategy implements AllocationStrategy {
      * @return The calculated fuel efficiency as mileage per fuel level.
      */
     private double calculateFuelEfficiency(Vehicle vehicle) {
-        // This could be calculated based on known data about vehicle's fuel consumption
+        //This could be calculated based on known data about vehicle's fuel consumption
         return vehicle.getMileage() / vehicle.getFuelLevel();
     }
 }

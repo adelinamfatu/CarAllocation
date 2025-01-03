@@ -11,6 +11,7 @@ import org.car.allocation.util.EngineType;
  */
 public class TruckFactory implements VehicleFactory {
     private double cargoCapacity;
+    private boolean hasRefrigerationUnit;
 
     public TruckFactory(double cargoCapacity) {
         this.cargoCapacity = cargoCapacity;
@@ -26,7 +27,7 @@ public class TruckFactory implements VehicleFactory {
      *         fuel level, and cargo capacity.
      */
     @Override
-    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, EngineType engineType) {
-        return new Truck(licensePlate, model, fuelLevel, engineType, cargoCapacity);
+    public Vehicle createVehicle(String licensePlate, String model, double fuelLevel, double maxSpeed, EngineType engineType) {
+        return new Truck(licensePlate, model, fuelLevel, maxSpeed, engineType, cargoCapacity, hasRefrigerationUnit);
     }
 }

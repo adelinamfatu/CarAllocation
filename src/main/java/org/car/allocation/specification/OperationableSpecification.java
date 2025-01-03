@@ -13,10 +13,8 @@ public class OperationableSpecification implements Specification<Vehicle> {
     @Override
     public boolean isSatisfiedBy(Vehicle vehicle) {
         return vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE
-                && vehicle.getVehicleStatus() != VehicleStatus.IN_MAINTENANCE
                 && vehicle.getFuelLevel() >= minFuelLevel;
     }
-
 
     @Override
     public Specification<Vehicle> and(Specification<Vehicle> other) {

@@ -18,5 +18,9 @@ public interface VehicleFactory {
      * @return A new Vehicle object with the specified license plate, model,
      *         and fuel level.
      */
-    Vehicle createVehicle(String licensePlate, String model, double fuelLevel, EngineType engineType);
+    Vehicle createVehicle(String licensePlate,
+                          String model,
+                          double fuelLevel,
+                          double maxSpeed,
+                          EngineType engineType);
 }
