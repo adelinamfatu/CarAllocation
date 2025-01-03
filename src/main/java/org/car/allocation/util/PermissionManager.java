@@ -9,7 +9,7 @@ public class PermissionManager {
     static {
         // Define permissions
         Map<VehicleStatus, List<String>> driverPermissions = new HashMap<>();
-        driverPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("VIEW"));
+        driverPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("VIEW", "RESERVE"));
         driverPermissions.put(VehicleStatus.IN_USE, Arrays.asList("DENY_VIEW"));
         driverPermissions.put(VehicleStatus.IN_MAINTENANCE, Arrays.asList("DENY_VIEW"));
 
