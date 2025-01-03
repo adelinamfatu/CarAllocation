@@ -1,6 +1,7 @@
 package org.car.allocation.model;
 
 import org.car.allocation.observer.VehicleObserver;
+import org.car.allocation.util.PermissionManager;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.util.VehicleStatus;
 import jakarta.persistence.*;
@@ -149,41 +150,30 @@ public class User implements VehicleObserver {
     public void update(String vehicleStatus) {
         System.out.println("User " + firstName + " notified: " + vehicleStatus);
 
-        //Logic based on user role and vehicle status
-        if (vehicleStatus.contains("Vehicle status changed to: AVAILABLE")) {
-            if (role == UserRole.DRIVER) {
-                System.out.println("Driver " + firstName + " can view vehicle details.");
-            } else if (role == UserRole.MANAGER) {
-                System.out.println("Manager " + firstName + " can reserve the vehicle.");
-            } else if (role == UserRole.ADMIN) {
-                System.out.println("Admin " + firstName + " has full access to the vehicle.");
-            }
-        } else if (vehicleStatus.contains("Vehicle status changed to: IN_USE")) {
-            if (role == UserRole.DRIVER) {
-                System.out.println("Driver " + firstName + " cannot view vehicle details as it is in use.");
-            } else if (role == UserRole.MANAGER) {
-                System.out.println("Manager " + firstName + " cannot reserve the vehicle as it is in use.");
-            }
-        } else if (vehicleStatus.contains("Vehicle status changed to: IN_MAINTENANCE")) {
-            if (role == UserRole.DRIVER) {
-                System.out.println("Driver " + firstName + " cannot view vehicle details as it is in maintenance.");
-            } else if (role == UserRole.MANAGER) {
-                System.out.println("Manager " + firstName + " cannot reserve the vehicle as it is in maintenance.");
-            }
-        } else if (vehicleStatus.contains("Vehicle status changed to: RESERVED")) {
-            System.out.println("Manager " + firstName + " cannot reserve the vehicle as it is already reserved.");
+        VehicleStatus status = VehicleStatus.valueOf(vehicleStatus.split(": ")[1]);
+
+        if (PermissionManager.isActionAllowed(role, status, "VIEW")) {
+            System.out.println(role + " " + firstName + " can view vehicle details.");
+        } else if (PermissionManager.isActionAllowed(role, status, "RESERVE")) {
+            System.out.println(role + " " + firstName + " can reserve the vehicle.");
+        } else if (PermissionManager.isActionAllowed(role, status, "FULL_ACCESS")) {
+            System.out.println(role + " " + firstName + " has full access to the vehicle.");
+        } else {
+            System.out.println(role + " " + firstName + " cannot perform any actions on the vehicle.");
         }
     }
+
 
     /**
      * User-specific access to reserve a vehicle. Available only if the vehicle is AVAILABLE
      */
     public void reserveVehicle(Vehicle vehicle) {
-        if (vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE && role == UserRole.MANAGER) {
-            System.out.println("Manager " + firstName + " has reserved the vehicle.");
-            vehicle.setVehicleStatus(VehicleStatus.RESERVED); //Mark the vehicle as reserved
+        if (PermissionManager.isActionAllowed(role, vehicle.getVehicleStatus(), "RESERVE")) {
+            System.out.println(role + " " + firstName + " has reserved the vehicle.");
+            vehicle.setVehicleStatus(VehicleStatus.RESERVED);
         } else {
-            System.out.println("Manager " + firstName + " cannot reserve the vehicle.");
+            System.out.println(role + " " + firstName + " cannot reserve the vehicle.");
         }
     }
+
 }
