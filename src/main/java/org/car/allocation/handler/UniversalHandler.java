@@ -162,6 +162,10 @@ public class UniversalHandler {
         System.out.println(messages.getString("enter.engine.type"));
         String engineType = scanner.nextLine().toUpperCase();
 
+        System.out.println(messages.getString("enter.mileage"));
+        double mileage = scanner.nextDouble();
+        scanner.nextLine();
+
         Vehicle vehicle;
 
         switch (typeChoice) {
@@ -175,7 +179,7 @@ public class UniversalHandler {
                 scanner.nextLine();
 
                 CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
-                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
+                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addCar((Car) vehicle);
                 System.out.println(messages.getString("car.added.successfully"));
                 break;
@@ -186,7 +190,7 @@ public class UniversalHandler {
                 scanner.nextLine();
 
                 TruckFactory truckFactory = new TruckFactory(cargoCapacity);
-                vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
+                vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addTruck((Truck) vehicle);
                 System.out.println(messages.getString("truck.added.successfully"));
                 break;
@@ -210,7 +214,8 @@ public class UniversalHandler {
                     System.out.println("  > ID: " + car.getId() + " - License Plate: " + car.getLicensePlate() +
                             ", Model: " + car.getModel() +
                             ", Fuel Level: " + car.getFuelLevel() +
-                            ", Passenger Capacity: " + car.getPassengerCapacity());
+                            ", Passenger Capacity: " + car.getPassengerCapacity() +
+                            ", Mileage: " + car.getMileage());
                 });
             });
         }
@@ -229,7 +234,8 @@ public class UniversalHandler {
                     System.out.println("  > ID: " + truck.getId() + " - License Plate: " + truck.getLicensePlate() +
                             ", Model: " + truck.getModel() +
                             ", Fuel Level: " + truck.getFuelLevel() +
-                            ", Cargo Capacity: " + truck.getCargoCapacity());
+                            ", Cargo Capacity: " + truck.getCargoCapacity() +
+                            ", Mileage: " + truck.getMileage());
                 });
             });
         }
@@ -298,8 +304,8 @@ public class UniversalHandler {
 
             System.out.println(messages.getString("vehicle.property"));
             String[] properties = (vehicle instanceof Car) ?
-                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity"} :
-                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity"};
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity", "Mileage"} :
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity", "Mileage"};
 
             for (int i = 0; i < properties.length; i++) {
                 System.out.printf("%d. %s\n", (i + 1), properties[i]);
@@ -318,7 +324,11 @@ public class UniversalHandler {
             String newValue = scanner.nextLine();
 
             //Apply updates based on choice
-            updateVehicleProperty(vehicle, propertyChoice, newValue);
+            if (propertyChoice == properties.length) { // Last property is Mileage
+                vehicle.setMileage(Double.parseDouble(newValue));
+            } else {
+                updateVehicleProperty(vehicle, propertyChoice, newValue);
+            }
 
             if (vehicle instanceof Car) {
                 vehicleService.updateCar((Car) vehicle);
