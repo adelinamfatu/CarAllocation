@@ -44,4 +44,24 @@ public class VehicleService<T extends Vehicle> {
         return carRepository.findAll();
     }
     public List<Truck> getAllTrucks() { return truckRepository.findAll(); }
+
+    public boolean deleteCarById(int id) {
+        Optional<Car> car = carRepository.findById(id);
+        if (car.isPresent()) {
+            carRepository.delete(car.get());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteTruckById(int id) {
+        Optional<Truck> truck = truckRepository.findById(id);
+        if (truck.isPresent()) {
+            truckRepository.delete(truck.get());
+            return true;
+        }
+        return false;
+    }
+
+
 }

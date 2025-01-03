@@ -83,7 +83,7 @@ public class UniversalHandler {
                         addNewVehicle();
                         break;
                     case 4:
-                        // Implement delete vehicle logic
+                        deleteVehicle();
                         break;
                     case 5:
                         backToMenu = true;
@@ -237,6 +237,32 @@ public class UniversalHandler {
                             ", Cargo Capacity: " + truck.getCargoCapacity());
                 });
             });
+        }
+    }
+
+    private void deleteVehicle() {
+        viewAllVehicles();
+        System.out.println("\nWhat type of vehicle would you like to DELETE?");
+        System.out.println("1. Car");
+        System.out.println("2. Truck");
+        int typeChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (typeChoice == 1 || typeChoice == 2) {
+            System.out.println("Enter the ID of the vehicle to delete:");
+            int vehicleId = scanner.nextInt();
+            scanner.nextLine();
+
+            boolean success = (typeChoice == 1) ? vehicleService.deleteCarById(vehicleId) : vehicleService.deleteTruckById(vehicleId);
+
+            if (success) {
+                System.out.println("Vehicle deleted successfully.");
+                viewAllVehicles();
+            } else {
+                System.out.println("No vehicle found with ID: " + vehicleId + " or error occurred during deletion.");
+            }
+        } else {
+            System.out.println("Invalid option. Please select 1 for Car or 2 for Truck.");
         }
     }
 

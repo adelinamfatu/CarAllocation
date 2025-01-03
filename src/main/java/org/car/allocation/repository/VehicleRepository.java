@@ -47,4 +47,5 @@ public class VehicleRepository<T extends Vehicle> {
                     .list();
         }
     }
+
 }
