@@ -133,74 +133,74 @@ public class UniversalHandler {
     }
 
     private void addNewVehicle() {
-        System.out.println("\nWhat type of vehicle would you like to add?");
-        System.out.println("1. Car");
-        System.out.println("2. Truck");
+        System.out.println(messages.getString("add.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
 
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
+        if (typeChoice != 1 && typeChoice != 2) {
+            System.out.println(messages.getString("returning.menu"));
+            return;  // Exit the method to stop further processing
+        }
+
         // Common vehicle properties
-        System.out.println("Enter license plate:");
+        System.out.println(messages.getString("enter.license"));
         String licensePlate = scanner.nextLine();
 
-        System.out.println("Enter model:");
+        System.out.println(messages.getString("enter.model"));
         String model = scanner.nextLine();
 
-        System.out.println("Enter fuel level:");
+        System.out.println(messages.getString("enter.fuel.level"));
         double fuelLevel = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter max speed:");
+        System.out.println(messages.getString("enter.max.speed"));
         double maxSpeed = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
+        System.out.println(messages.getString("enter.engine.type"));
         String engineType = scanner.nextLine().toUpperCase();
 
         Vehicle vehicle;
 
         switch (typeChoice) {
             case 1: // Car
-                System.out.println("Enter passenger capacity for the car:");
+                System.out.println(messages.getString("enter.passenger.capacity"));
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
 
-                System.out.println("Enter comfort level for the car:");
+                System.out.println(messages.getString("enter.comfort.level"));
                 int comfortLevel = scanner.nextInt();
                 scanner.nextLine();
 
                 CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
                 vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
                 vehicleService.addCar((Car) vehicle);
-                System.out.println("Car added successfully!");
+                System.out.println(messages.getString("car.added.successfully"));
                 break;
 
             case 2: // Truck
-                System.out.println("Enter cargo capacity for the truck:");
+                System.out.println(messages.getString("enter.cargo.capacity"));
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
 
                 TruckFactory truckFactory = new TruckFactory(cargoCapacity);
                 vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType));
                 vehicleService.addTruck((Truck) vehicle);
-                System.out.println("Truck added successfully!");
-                break;
-
-            default:
-                System.out.println("Invalid option, returning to menu.");
+                System.out.println(messages.getString("truck.added.successfully"));
                 break;
         }
     }
 
     private void viewAllVehicles() {
-        System.out.println("\nAll Vehicles:");
+        System.out.println(messages.getString("all.vehicles"));
 
         //Display all cars grouped by engine type
-        System.out.println("Cars:");
+        System.out.println(messages.getString("cars.section"));
         List<Car> cars = vehicleService.getAllCars();
         if (cars.isEmpty()) {
-            System.out.println("No cars available.");
+            System.out.println(messages.getString("no.cars.available"));
         } else {
             Map<EngineType, List<Car>> groupedCars = cars.stream()
                     .collect(Collectors.groupingBy(Car::getEngineType));
@@ -216,10 +216,10 @@ public class UniversalHandler {
         }
 
         //Display all trucks grouped by engine type
-        System.out.println("Trucks:");
+        System.out.println(messages.getString("trucks.section"));
         List<Truck> trucks = vehicleService.getAllTrucks();
         if (trucks.isEmpty()) {
-            System.out.println("No trucks available.");
+            System.out.println(messages.getString("no.trucks.available"));
         } else {
             Map<EngineType, List<Truck>> groupedTrucks = trucks.stream()
                     .collect(Collectors.groupingBy(Truck::getEngineType));
@@ -237,49 +237,49 @@ public class UniversalHandler {
 
     private void deleteVehicle() {
         viewAllVehicles();
-        System.out.println("\nWhat type of vehicle would you like to DELETE?");
-        System.out.println("1. Car");
-        System.out.println("2. Truck");
+        System.out.println(messages.getString("delete.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
+
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (typeChoice == 1 || typeChoice == 2) {
-            System.out.println("Enter the ID of the vehicle to delete:");
+            System.out.println(messages.getString("vehicle.id.prompt.delete"));
             int vehicleId = scanner.nextInt();
             scanner.nextLine();
 
             boolean success = (typeChoice == 1) ? vehicleService.deleteCarById(vehicleId) : vehicleService.deleteTruckById(vehicleId);
 
             if (success) {
-                System.out.println("Vehicle deleted successfully.");
+                System.out.println(messages.getString("vehicle.deleted.successfully"));
                 viewAllVehicles();
             } else {
                 System.out.println("No vehicle found with ID: " + vehicleId + " or error occurred during deletion.");
             }
         } else {
-            System.out.println("Invalid option. Please select 1 for Car or 2 for Truck.");
+            System.out.println(messages.getString("invalid.option"));
         }
     }
 
     private void updateVehicle() {
-        System.out.println("\nWhat type of vehicle would you like to UPDATE?");
-        System.out.println("1. Car");
-        System.out.println("2. Truck");
+        System.out.println(messages.getString("vehicle.update.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
+
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (typeChoice != 1 && typeChoice != 2) {
-            System.out.println("Invalid option. Please select 1 for Car or 2 for Truck.");
+            System.out.println(messages.getString("invalid.option"));
             return;
         }
 
-        System.out.println("Enter the ID of the vehicle to update:");
+        System.out.println(messages.getString("vehicle.id.prompt.update"));
         int vehicleId;
         try {
             vehicleId = scanner.nextInt();
             scanner.nextLine();
         } catch (Exception e) {
-            System.out.println("Invalid input for ID. Please enter a valid integer.");
+            System.out.println(messages.getString("invalid.option"));
             scanner.next(); //Clear scanner buffer
             return;
         }
@@ -296,7 +296,7 @@ public class UniversalHandler {
 
             Vehicle vehicle = vehicleOptional.get();
 
-            System.out.println("Select the property to update:");
+            System.out.println(messages.getString("vehicle.property"));
             String[] properties = (vehicle instanceof Car) ?
                     new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity"} :
                     new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity"};
@@ -309,11 +309,12 @@ public class UniversalHandler {
             scanner.nextLine();
 
             if (propertyChoice < 1 || propertyChoice > properties.length) {
-                System.out.println("Invalid property choice.");
+                System.out.println(messages.getString("invalid.property"));
                 return;
             }
 
-            System.out.println("Enter new value for " + properties[propertyChoice - 1] + ":");
+            String property = properties[propertyChoice - 1];
+            System.out.println(MessageFormat.format(messages.getString("new.value.prompt"), property));
             String newValue = scanner.nextLine();
 
             //Apply updates based on choice
@@ -325,7 +326,7 @@ public class UniversalHandler {
                 vehicleService.updateTruck((Truck) vehicle);
             }
 
-            System.out.println("Vehicle updated successfully:\n" + vehicle);
+            System.out.println(messages.getString("vehicle.updated") + vehicle);
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
@@ -389,4 +390,3 @@ public class UniversalHandler {
 
 
 }
-
