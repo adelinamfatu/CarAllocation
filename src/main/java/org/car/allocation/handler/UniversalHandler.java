@@ -12,12 +12,16 @@ import org.car.allocation.service.VehicleService;
 import org.car.allocation.model.Vehicle;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.text.MessageFormat;
 
 public class UniversalHandler {
     private final Scanner scanner;
     private final UserRole userRole;
     private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
+    private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
+
 
     public UniversalHandler(Scanner scanner, UserRole role) {
         this.scanner = scanner;
@@ -25,17 +29,21 @@ public class UniversalHandler {
     }
 
     public void handleLogin() {
-        System.out.println("\nPlease enter your username:");
+        System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
         User user = new User(username, userRole);
 
-        System.out.println("Welcome " + username + "! You are logged in as a " + userRole + ".");
-        if (userRole == UserRole.DRIVER) {
-            System.out.println("You can view available vehicles and make reservations.");
-        } else if (userRole == UserRole.MANAGER) {
-            System.out.println("You can reserve vehicles, view available vehicles, and view vehicle status.");
-        } else if (userRole == UserRole.ADMIN) {
-            System.out.println("You have full access to all operations: view, add, and delete vehicles.");
+        System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, userRole));
+        switch (userRole) {
+            case DRIVER:
+                System.out.println(messages.getString("permissions.driver"));
+                break;
+            case MANAGER:
+                System.out.println(messages.getString("permissions.manager"));
+                break;
+            case ADMIN:
+                System.out.println(messages.getString("permissions.admin"));
+                break;
         }
 
         showOptions();
@@ -44,45 +52,80 @@ public class UniversalHandler {
     private void showOptions() {
         boolean backToMenu = false;
         while (!backToMenu) {
-            System.out.println("\nWhat would you like to do?");
-            if (userRole == UserRole.ADMIN || userRole == UserRole.MANAGER) {
-                System.out.println("1. Add a new vehicle");
-                System.out.println("2. Delete a vehicle");
+            System.out.println("\n" + messages.getString("options.prompt"));
+
+            switch (userRole) {
+                case ADMIN:
+                    System.out.println(messages.getString("admin.options"));
+                    break;
+                case MANAGER:
+                    System.out.println(messages.getString("manager.options"));
+                    break;
+                case DRIVER:
+                    System.out.println(messages.getString("driver.options"));
+                    break;
             }
-            System.out.println("3. View all vehicles");
-            System.out.println("4. Reserve a vehicle");
-            System.out.println("5. Go back to main menu");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    if (userRole == UserRole.ADMIN || userRole == UserRole.MANAGER) {
-                        System.out.println("You chose option 1: Add a new vehicle.");
+            if (userRole == UserRole.ADMIN) {
+                switch (choice) {
+                    case 1:
+                        viewAllVehicles();
+                        break;
+                    case 2:
+                        // Implement view vehicle status logic
+                        break;
+                    case 3:
                         addNewVehicle();
-                    }
-                    break;
-                case 2:
-                    if (userRole == UserRole.ADMIN || userRole == UserRole.MANAGER) {
-                        System.out.println("You chose option 2: Delete a vehicle.");
-                        // Implement delete vehicle logic here
-                    }
-                    break;
-                case 3:
-                    System.out.println("You chose option 3: View all vehicles.");
-                    viewAllVehicles();
-                    break;
-                case 4:
-                    System.out.println("You chose option 4: Reserve a vehicle.");
-                    // Implement reserve vehicle logic here
-                    break;
-                case 5:
-                    backToMenu = true;
-                    break;
-                default:
-                    System.out.println("Invalid option, please try again.");
-                    break;
+                        break;
+                    case 4:
+                        // Implement delete vehicle logic
+                        break;
+                    case 5:
+                        backToMenu = true;
+                        break;
+                    default:
+                        System.out.println(messages.getString("invalid.option"));
+                        break;
+                }
+            } else if (userRole == UserRole.MANAGER) {
+                switch (choice) {
+                    case 1:
+                        // Implement reserve vehicle logic
+                        break;
+                    case 2:
+                        viewAllVehicles();
+                        break;
+                    case 3:
+                        // Implement view vehicle status logic
+                        break;
+                    case 4:
+                        backToMenu = true;
+                        break;
+                    default:
+                        System.out.println(messages.getString("invalid.option"));
+                        break;
+                }
+            } else if (userRole == UserRole.DRIVER) {
+                switch (choice) {
+                    case 1:
+                        viewAllVehicles();
+                        break;
+                    case 2:
+                        // Implement reserve vehicle logic
+                        break;
+                    case 3:
+                        // Implement view reservation history logic
+                        break;
+                    case 4:
+                        backToMenu = true;
+                        break;
+                    default:
+                        System.out.println(messages.getString("invalid.option"));
+                        break;
+                }
             }
         }
     }
