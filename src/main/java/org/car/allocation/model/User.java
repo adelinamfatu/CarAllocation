@@ -10,11 +10,9 @@ import jakarta.persistence.*;
  * This class implements the VehicleObserver interface and defines the
  * behavior for receiving notifications when the vehicle's status changes.
  */
-
 @Entity
 @Table(name = "users")
 public class User implements VehicleObserver {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

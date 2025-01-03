@@ -1,35 +1,38 @@
 package org.car.allocation.strategy;
 
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.specification.EngineTypeSpecification;
+import org.car.allocation.specification.FuelEfficientSpecification;
+import org.car.allocation.specification.Specification;
+import org.car.allocation.util.EngineType;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implements the AllocationStrategy interface to allocate vehicles based on fuel efficiency.
- * It selects the vehicle that achieves the highest distance per unit of fuel consumed.
+ * It selects the vehicle that TO BE COMPLETED
  */
 public class FuelEfficientStrategy implements AllocationStrategy {
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
-        Vehicle selectedVehicle = null;
-        double maxEfficiency = 0.0; //Presuming efficiency is calculated as distance traveled per unit of fuel
+        //Specification for Electric or Hybrid vehicles (engine type)
+        Specification<Vehicle> ecoFriendlySpec = new EngineTypeSpecification(EngineType.ELECTRIC)
+                .or(new EngineTypeSpecification(EngineType.HYBRID));  //Vehicles with electric or hybrid engines
 
-        for (Vehicle vehicle : availableVehicles) {
-            double efficiency = calculateFuelEfficiency(vehicle); //Method to calculate efficiency
-            if (efficiency > maxEfficiency) {
-                maxEfficiency = efficiency;
-                selectedVehicle = vehicle;
-            }
-        }
-        return selectedVehicle;
-    }
+        //Specification for non-Electric/Hybrid vehicles with certain mileage and speed
+        Specification<Vehicle> nonEcoSpec = new FuelEfficientSpecification(EngineType.PETROL, 150000, 100);
 
-    /**
-     * A simple implementation could use data about fuel consumption.
-     * @param vehicle The vehicle for which to calculate fuel efficiency.
-     * @return The calculated fuel efficiency as mileage per fuel level.
-     */
-    private double calculateFuelEfficiency(Vehicle vehicle) {
-        //This could be calculated based on known data about vehicle's fuel consumption
-        return vehicle.getMileage() / vehicle.getFuelLevel();
+        //Combine both specifications using OR: prioritize either eco-friendly or non-eco-friendly vehicles with high fuel efficiency
+        var specification = ecoFriendlySpec.or(nonEcoSpec);
+
+        List<Vehicle> filteredVehicles = availableVehicles.stream()
+                .filter(specification::isSatisfiedBy) //Filter based on the specification
+                .collect(Collectors.toList());
+
+        //Allocate the first available vehicle from the filtered list
+        return filteredVehicles.stream()
+                .findFirst()
+                .orElse(null);
     }
 }

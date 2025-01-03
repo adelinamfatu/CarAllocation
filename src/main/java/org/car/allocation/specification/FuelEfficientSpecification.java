@@ -1,18 +1,25 @@
 package org.car.allocation.specification;
 
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.util.EngineType;
 
 public class FuelEfficientSpecification implements Specification<Vehicle> {
-    private final double minEfficiency;
+    private final EngineType preferredEngineType;
+    private final double maxMileage;
+    private final double minSpeed;
 
-    public FuelEfficientSpecification(double minEfficiency) {
-        this.minEfficiency = minEfficiency;
+    public FuelEfficientSpecification(EngineType preferredEngineType, double maxMileage, double minSpeed) {
+        this.preferredEngineType = preferredEngineType;
+        this.maxMileage = maxMileage;
+        this.minSpeed = minSpeed;
     }
 
     @Override
     public boolean isSatisfiedBy(Vehicle vehicle) {
-        double efficiency = vehicle.getMileage() / vehicle.getFuelLevel();
-        return efficiency >= minEfficiency;
+        if (vehicle.getEngineType() == preferredEngineType) {
+            return vehicle.getMileage() <= maxMileage && vehicle.getMaxSpeed() >= minSpeed;
+        }
+        return false; //Not relevant if the vehicle does not match the engine type
     }
 
     @Override

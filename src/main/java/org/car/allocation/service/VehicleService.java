@@ -1,4 +1,6 @@
 package org.car.allocation.service;
+import org.car.allocation.specification.OperationableSpecification;
+import org.car.allocation.specification.Specification;
 import org.car.allocation.strategy.AllocationStrategy;
 
 import org.car.allocation.model.Car;
@@ -9,6 +11,7 @@ import org.car.allocation.repository.VehicleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
@@ -37,13 +40,10 @@ public class VehicleService<T extends Vehicle> {
         return truckRepository.findById(id);
     }
 
-    public List<Car> getCarsByEngineType(String engineType) {
-        return carRepository.findByEngineType(engineType);
-    }
-
     public List<Car> getAllCars() {
         return carRepository.findAll();
     }
+
     public List<Truck> getAllTrucks() { return truckRepository.findAll(); }
 
     public boolean deleteCarById(int id) {
@@ -68,8 +68,23 @@ public class VehicleService<T extends Vehicle> {
 
     public void updateTruck(Truck truck) { truckRepository.update(truck); }
 
-    // STRATEGY
-    public Vehicle allocateVehicle(List<Vehicle> availableVehicles, AllocationStrategy strategy) {
-        return strategy.allocate(availableVehicles);
+    public Vehicle allocateVehicle() {
+        //Gather all vehicles
+        List<Vehicle> allVehicles = getAllVehicles();
+
+        //Filter available vehicles
+        Specification<Vehicle> operationalSpec = new OperationableSpecification(50.0);
+        List<Vehicle> availableVehicles = allVehicles.stream()
+                .filter(operationalSpec::isSatisfiedBy)
+                .collect(Collectors.toList());
+
+        if (availableVehicles.isEmpty()) {
+            System.out.println("No available vehicles that meet the operational requirements.");
+            return null;
+        }
+
+
+        System.out.println("No vehicle could be allocated with the selected strategies.");
+        return null;
     }
 }

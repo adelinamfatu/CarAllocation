@@ -26,12 +26,12 @@ public class VehicleAllocationHandler {
      * @return Allocated vehicle or null if none satisfies the criteria.
      */
     public Vehicle allocateVehicle(List<Vehicle> allVehicles) {
-        // Filter vehicles based on the specification
+        //Filter vehicles based on the specification
         List<Vehicle> filteredVehicles = allVehicles.stream()
                 .filter(filterSpecification::isSatisfiedBy)
                 .collect(Collectors.toList());
 
-        // Apply the allocation strategy on the filtered list
+        //Apply the allocation strategy on the filtered list
         return strategy.allocate(filteredVehicles);
     }
 }

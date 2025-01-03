@@ -2,13 +2,9 @@ package org.car.allocation.handler;
 
 import org.car.allocation.abstract_factory.CarFactory;
 import org.car.allocation.abstract_factory.TruckFactory;
-import org.car.allocation.abstract_factory.VehicleFactory;
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.User;
-import org.car.allocation.strategy.AllocationStrategy;
-import org.car.allocation.strategy.CargoPriorityStrategy;
-import org.car.allocation.strategy.FuelEfficientStrategy;
 import org.car.allocation.util.EngineType;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.service.VehicleService;
@@ -161,7 +157,7 @@ public class UniversalHandler {
         Vehicle vehicle;
 
         switch (typeChoice) {
-            case 1: // Car
+            case 1: //Car
                 System.out.println("Enter passenger capacity for the car:");
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
@@ -176,7 +172,7 @@ public class UniversalHandler {
                 System.out.println("Car added successfully!");
                 break;
 
-            case 2: // Truck
+            case 2: //Truck
                 System.out.println("Enter cargo capacity for the truck:");
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
@@ -356,37 +352,12 @@ public class UniversalHandler {
         }
     }
 
-    //STRATEGY
     private void allocateVehicle() {
-        List<Vehicle> availableVehicles = vehicleService.getAllVehicles();
-        System.out.println("Choose an allocation strategy:");
-        System.out.println("1. Fuel Efficiency");
-        System.out.println("2. Cargo Priority");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        AllocationStrategy strategy;
-        switch (choice) {
-            case 1:
-                strategy = new FuelEfficientStrategy();
-                break;
-            case 2:
-                strategy = new CargoPriorityStrategy();
-                break;
-            default:
-                System.out.println("Invalid choice.");
-                return;
-        }
-
-        Vehicle vehicle = vehicleService.allocateVehicle(availableVehicles, strategy);
+        Vehicle vehicle = vehicleService.allocateVehicle();
         if (vehicle != null) {
-            System.out.println("Allocated Vehicle: " + vehicle.toString());
+            System.out.println("Allocated Vehicle: " + vehicle);
         } else {
             System.out.println("No vehicle available that fits the criteria.");
         }
     }
-
-
 }
-
