@@ -9,6 +9,7 @@ import org.car.allocation.util.EngineType;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.service.VehicleService;
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.util.VehicleStatus;
 
 import java.util.*;
 import java.text.MessageFormat;
@@ -114,10 +115,13 @@ public class UniversalHandler {
                         viewAllVehicles();
                         break;
                     case 2:
+                        releaseVehicle();
                         break;
                     case 3:
                         break;
                     case 4:
+                        break;
+                    case 5:
                         backToMenu = true;
                         break;
                     default:
@@ -360,7 +364,6 @@ public class UniversalHandler {
         }
     }
 
-    //STRATEGY
     private void allocateVehicle() {
         Vehicle vehicle = vehicleService.allocateVehicle();
         if (vehicle != null) {
@@ -368,6 +371,56 @@ public class UniversalHandler {
         } else {
             System.out.println("No vehicle available that fits the criteria.");
         }
+    }
+
+    public void releaseVehicle() {
+        if (userRole != UserRole.DRIVER) {
+            System.out.println(messages.getString("invalid.role"));
+            return;
+        }
+
+        System.out.println(messages.getString("release.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice != 1 && choice != 2) {
+            System.out.println(messages.getString("invalid.option"));
+            return;
+        }
+
+        viewAllVehicles();
+        System.out.println(messages.getString("vehicle.id.prompt.release"));
+        int vehicleId = scanner.nextInt();
+        scanner.nextLine();
+
+        Optional<? extends Vehicle> vehicleOptional;
+        if (choice == 1) {
+            vehicleOptional = vehicleService.findCarById(vehicleId);
+        } else {
+            vehicleOptional = vehicleService.findTruckById(vehicleId);
+        }
+
+        if (!vehicleOptional.isPresent() || vehicleOptional.get().getVehicleStatus() != VehicleStatus.IN_USE) {
+            System.out.println(messages.getString("vehicle.no.use"));
+            return;
+        }
+
+        Vehicle vehicle = vehicleOptional.get();
+        System.out.println("Current mileage: " + vehicle.getMileage());
+        System.out.println(messages.getString("enter.new.mileage"));
+        double newMileage = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (newMileage < vehicle.getMileage()) {
+            System.out.println(messages.getString("invalid.mileage"));
+            return;
+        }
+
+        vehicle.setMileage(newMileage);
+        vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); // Change status to available
+        System.out.println(messages.getString("vehicle.released") + newMileage);
     }
 
 
