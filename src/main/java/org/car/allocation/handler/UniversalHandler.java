@@ -133,60 +133,59 @@ public class UniversalHandler {
     }
 
     private void addNewVehicle() {
-        System.out.println("\nWhat type of vehicle would you like to add?");
-        System.out.println("1. Car");
-        System.out.println("2. Truck");
+        System.out.println(messages.getString("add.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
 
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (typeChoice != 1 && typeChoice != 2) {
             System.out.println(messages.getString("returning.menu"));
-            return;  // Exit the method to stop further processing
+            return;  //Exit the method to stop further processing
         }
 
-        // Common vehicle properties
-        System.out.println("Enter license plate:");
+        //Common vehicle properties
+        System.out.println(messages.getString("enter.license"));
         String licensePlate = scanner.nextLine();
 
-        System.out.println("Enter model:");
+        System.out.println(messages.getString("enter.model"));
         String model = scanner.nextLine();
 
-        System.out.println("Enter fuel level:");
+        System.out.println(messages.getString("enter.fuel.level"));
         double fuelLevel = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter max speed:");
+        System.out.println(messages.getString("enter.max.speed"));
         double maxSpeed = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter mileage speed:");
+        System.out.println(messages.getString("enter.engine.type"));
+        String engineType = scanner.nextLine().toUpperCase();
+
+        System.out.println(messages.getString("enter.mileage"));
         double mileage = scanner.nextDouble();
         scanner.nextLine();
-
-        System.out.println("Enter engine type (PETROL, DIESEL, ELECTRIC, HYBRID):");
-        String engineType = scanner.nextLine().toUpperCase();
 
         Vehicle vehicle;
 
         switch (typeChoice) {
             case 1: //Car
-                System.out.println("Enter passenger capacity for the car:");
+                System.out.println(messages.getString("enter.passenger.capacity"));
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
 
-                System.out.println("Enter comfort level for the car:");
+                System.out.println(messages.getString("enter.comfort.level"));
                 int comfortLevel = scanner.nextInt();
                 scanner.nextLine();
 
                 CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
-                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType),mileage);
+                vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addCar((Car) vehicle);
-                System.out.println("Car added successfully!");
+                System.out.println(messages.getString("car.added.successfully"));
                 break;
 
             case 2: //Truck
-                System.out.println("Enter cargo capacity for the truck:");
+                System.out.println(messages.getString("enter.cargo.capacity"));
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
 
@@ -325,7 +324,7 @@ public class UniversalHandler {
             String newValue = scanner.nextLine();
 
             //Apply updates based on choice
-            if (propertyChoice == properties.length) { // Last property is Mileage
+            if (propertyChoice == properties.length) { //Last property is Mileage
                 vehicle.setMileage(Double.parseDouble(newValue));
             } else {
                 updateVehicleProperty(vehicle, propertyChoice, newValue);
