@@ -5,6 +5,7 @@ import org.car.allocation.model.Truck;
 import org.car.allocation.specification.CargoCapacitySpecification;
 import org.car.allocation.specification.Specification;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,6 @@ public class CargoPriorityStrategy implements AllocationStrategy {
     private final Specification<Vehicle> specification;
 
     public CargoPriorityStrategy(double minCargoCapacity) {
-        //Cargo capacity: prioritize trucks with greater cargo capacity
         Specification<Vehicle> cargoCapacitySpec = new CargoCapacitySpecification(minCargoCapacity);
 
         specification = cargoCapacitySpec;
@@ -33,9 +33,8 @@ public class CargoPriorityStrategy implements AllocationStrategy {
         //Calculate the truck with the best load efficiency: max(cargoCapacity / fuelLevel)
         Optional<Truck> bestTruck = filteredVehicles.stream()
                 .map(vehicle -> (Truck) vehicle)
-                .max((truck1, truck2) -> Double.compare(
-                        truck1.getCargoCapacity() / truck1.getFuelLevel(),
-                        truck2.getCargoCapacity() / truck2.getFuelLevel())) //Compare load efficiency
+                .max(Comparator.comparingDouble(truck ->
+                        truck.getCargoCapacity() / truck.getFuelLevel())) //Compare load efficiency
                 .map(Optional::of) //If any truck is found, wrap in Optional
                 .orElse(Optional.empty());
 
