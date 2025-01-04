@@ -165,7 +165,6 @@ public class User implements VehicleObserver {
         }
     }
 
-
     /**
      * User-specific access to reserve a vehicle. Available only if the vehicle is AVAILABLE
      */
@@ -177,5 +176,4 @@ public class User implements VehicleObserver {
             System.out.println(role + " " + firstName + " cannot reserve the vehicle.");
         }
     }
-
 }

@@ -37,11 +37,11 @@ public class Main {
             System.out.println("3. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); //Consume newline
 
             switch (choice) {
                 case 1:
-                    // Login
+                    //Login
                     System.out.println("Choose your role:");
                     System.out.println("1. Driver");
                     System.out.println("2. Manager");
@@ -66,13 +66,13 @@ public class Main {
                     break;
 
                 case 2:
-                    // Sign In (Create new user)
+                    //Sign In (Create new user)
                     System.out.println("Choose your role for Sign In:");
                     System.out.println("1. Driver");
                     System.out.println("2. Manager");
                     System.out.println("3. Admin");
                     roleChoice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine(); //Consume newline
 
                     switch (roleChoice) {
                         case 1:
