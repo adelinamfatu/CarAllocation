@@ -3,6 +3,7 @@ package org.car.allocation.strategy;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.model.Truck;
 import org.car.allocation.specification.CargoCapacitySpecification;
+import org.car.allocation.specification.RefrigerationUnitSpecification;
 import org.car.allocation.specification.Specification;
 
 import java.util.Comparator;
@@ -10,17 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implements the AllocationStrategy interface to prioritize trucks based on their cargo capacity.
- * This strategy selects the truck with the highest cargo capacity from the list of available trucks,
- * optimizing for the ability to transport the largest possible load.
+ * Implements the AllocationStrategy interface to prioritize non-refrigerated trucks based on their cargo capacity.
+ * This strategy selects the non-refrigerated truck with the highest cargo capacity from the list of available trucks,
+ * optimizing for the ability to transport the largest possible load without refrigeration.
  */
 public class CargoPriorityStrategy implements AllocationStrategy {
     private final Specification<Vehicle> specification;
 
     public CargoPriorityStrategy(double minCargoCapacity) {
         Specification<Vehicle> cargoCapacitySpec = new CargoCapacitySpecification(minCargoCapacity);
+        Specification<Vehicle> nonRefrigeratedSpec = new RefrigerationUnitSpecification(false);
 
-        specification = cargoCapacitySpec;
+        // Combine specifications to filter non-refrigerated trucks with at least the minimum cargo capacity
+        this.specification = cargoCapacitySpec.and(nonRefrigeratedSpec);
     }
 
     @Override

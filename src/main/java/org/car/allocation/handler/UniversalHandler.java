@@ -272,7 +272,8 @@ public class UniversalHandler {
                             ", Model: " + car.getModel() +
                             ", Fuel Level: " + car.getFuelLevel() +
                             ", Passenger Capacity: " + car.getPassengerCapacity() +
-                            ", Mileage: " + car.getMileage());
+                            ", Mileage: " + car.getMileage() +
+                            ", Status: " + car.getVehicleStatus());
                 });
             });
         }
@@ -293,7 +294,8 @@ public class UniversalHandler {
                             ", Fuel Level: " + truck.getFuelLevel() +
                             ", Cargo Capacity: " + truck.getCargoCapacity() +
                             ", Mileage: " + truck.getMileage() +
-                            ", Has refrigeration unit: " + truck.hasRefrigerationUnit());
+                            ", Has refrigeration unit: " + truck.hasRefrigerationUnit() +
+                            ", Status: " + truck.getVehicleStatus());
                 });
             });
         }
