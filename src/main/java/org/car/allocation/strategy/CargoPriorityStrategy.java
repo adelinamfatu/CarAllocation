@@ -22,7 +22,7 @@ public class CargoPriorityStrategy implements AllocationStrategy {
         Specification<Vehicle> cargoCapacitySpec = new CargoCapacitySpecification(minCargoCapacity);
         Specification<Vehicle> nonRefrigeratedSpec = new RefrigerationUnitSpecification(false);
 
-        // Combine specifications to filter non-refrigerated trucks with at least the minimum cargo capacity
+        //Combine specifications to filter non-refrigerated trucks with at least the minimum cargo capacity
         this.specification = cargoCapacitySpec.and(nonRefrigeratedSpec);
     }
 

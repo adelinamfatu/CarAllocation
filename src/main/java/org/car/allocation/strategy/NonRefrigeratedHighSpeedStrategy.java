@@ -13,14 +13,14 @@ public class NonRefrigeratedHighSpeedStrategy implements AllocationStrategy {
     private final Specification<Vehicle> specification;
 
     public NonRefrigeratedHighSpeedStrategy() {
-        // Not refrigerated trucks
+        //Not refrigerated trucks
         Specification<Vehicle> refrigeratedSpec = new RefrigerationUnitSpecification(true);
         this.specification = refrigeratedSpec.not();
     }
 
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
-        // Select trucks that are not refrigerated and have high max speed
+        //Select trucks that are not refrigerated and have high max speed
         List<Truck> suitableTrucks = availableVehicles.stream()
                 .filter(specification::isSatisfiedBy)
                 .filter(v -> v instanceof Truck) // Ensure it's a truck

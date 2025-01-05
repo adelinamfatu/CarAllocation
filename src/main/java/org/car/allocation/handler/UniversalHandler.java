@@ -5,7 +5,6 @@ import org.car.allocation.abstract_factory.TruckFactory;
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.User;
-import org.car.allocation.repository.UserRepository;
 import org.car.allocation.service.UserService;
 import org.car.allocation.util.EngineType;
 import org.car.allocation.util.UserRole;
@@ -20,9 +19,9 @@ import java.util.stream.Collectors;
 public class UniversalHandler {
     private final Scanner scanner;
     private final UserRole userRole;
+    private final UserService userService = new UserService();
     private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
-    private final UserRepository userRepository = new UserRepository();
 
     public UniversalHandler(Scanner scanner, UserRole role) {
         this.scanner = scanner;
@@ -35,7 +34,7 @@ public class UniversalHandler {
         System.out.println(messages.getString("login.password.prompt"));
         String password = scanner.nextLine();
 
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userService.findUserByUsername(username).orElse(null);
 
         if (user != null && user.getPassword().equals(password)) {
             System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, userRole));
@@ -518,6 +517,4 @@ public class UniversalHandler {
         vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); // Change status to available
         System.out.println(messages.getString("vehicle.released") + newMileage);
     }
-
-
 }

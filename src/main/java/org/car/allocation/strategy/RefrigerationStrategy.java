@@ -21,13 +21,13 @@ public class RefrigerationStrategy implements AllocationStrategy {
 
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
-        // Filter trucks with refrigeration
+        //Filter trucks with refrigeration
         List<Truck> refrigeratedTrucks = availableVehicles.stream()
                 .filter(specification::isSatisfiedBy)
                 .map(v -> (Truck) v)
                 .collect(Collectors.toList());
 
-        // Prioritize by another factor, like lowest mileage
+        //Prioritize by another factor, like lowest mileage
         return refrigeratedTrucks.stream()
                 .min(Comparator.comparingDouble(Truck::getMileage))
                 .orElse(null);
