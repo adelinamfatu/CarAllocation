@@ -1,6 +1,6 @@
 package org.car.allocation;
 
-import org.car.allocation.handler.UniversalHandler;
+import org.car.allocation.handler.MenuHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.car.allocation.util.HibernateUtil;
@@ -51,13 +51,13 @@ public class Main {
 
                     switch (roleChoice) {
                         case 1:
-                            new UniversalHandler(scanner, UserRole.DRIVER).handleLogin();
+                            new MenuHandler(scanner, UserRole.DRIVER).handleLogin();
                             break;
                         case 2:
-                            new UniversalHandler(scanner, UserRole.MANAGER).handleLogin();
+                            new MenuHandler(scanner, UserRole.MANAGER).handleLogin();
                             break;
                         case 3:
-                            new UniversalHandler(scanner, UserRole.ADMIN).handleLogin();
+                            new MenuHandler(scanner, UserRole.ADMIN).handleLogin();
                             break;
                         default:
                             System.out.println("Invalid role selected.");
@@ -76,13 +76,13 @@ public class Main {
 
                     switch (roleChoice) {
                         case 1:
-                            new UniversalHandler(scanner, UserRole.DRIVER).handleSignIn();
+                            new MenuHandler(scanner, UserRole.DRIVER).handleSignIn();
                             break;
                         case 2:
-                            new UniversalHandler(scanner, UserRole.MANAGER).handleSignIn();
+                            new MenuHandler(scanner, UserRole.MANAGER).handleSignIn();
                             break;
                         case 3:
-                            new UniversalHandler(scanner, UserRole.ADMIN).handleSignIn();
+                            new MenuHandler(scanner, UserRole.ADMIN).handleSignIn();
                             break;
                         default:
                             System.out.println("Invalid role selected.");
