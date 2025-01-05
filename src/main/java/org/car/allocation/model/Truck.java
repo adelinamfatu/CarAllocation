@@ -61,7 +61,7 @@ public class Truck extends Vehicle {
 
     @Override
     public String toString() {
-        return String.format("Truck [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Cargo Capacity: %.1f]",
-                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), cargoCapacity, getMileage());
+        return String.format("Truck [ID: %d, License Plate: %s, Model: %s, Fuel Level: %.1f, Engine Type: %s, Cargo Capacity: %.1f, Mileage: %.1f, Has refrigeration unit: %b]",
+                getId(), getLicensePlate(), getModel(), getFuelLevel(), getEngineType(), cargoCapacity, getMileage(), hasRefrigerationUnit);
     }
 }

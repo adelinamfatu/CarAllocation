@@ -20,11 +20,20 @@ public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
     private final VehicleRepository<Vehicle> vehicleRepository = new VehicleRepository<>(Vehicle.class);
 
+    // Utility method to gather all vehicles from the repository
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
         vehicles.addAll(carRepository.findAll());
         vehicles.addAll(truckRepository.findAll());
         return vehicles;
+    }
+
+    // Method to get all available vehicles
+    public List<Vehicle> getAvailableVehicles() {
+        List<Vehicle> allVehicles = getAllVehicles();
+        return allVehicles.stream()
+                .filter(vehicle -> vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE)
+                .collect(Collectors.toList());
     }
 
     public void addCar(Car car) {

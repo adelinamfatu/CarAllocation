@@ -141,7 +141,7 @@ public class UniversalHandler {
                     case 1:
                         break;
                     case 2:
-                        viewAllVehicles();
+                        viewAvailableVehicles();
                         break;
                     case 3:
                         break;
@@ -155,7 +155,7 @@ public class UniversalHandler {
             } else if (userRole == UserRole.DRIVER) {
                 switch (choice) {
                     case 1:
-                        viewAllVehicles();
+                        viewAvailableVehicles();
                         break;
                     case 2:
                         releaseVehicle();
@@ -298,6 +298,18 @@ public class UniversalHandler {
                             ", Status: " + truck.getVehicleStatus());
                 });
             });
+        }
+    }
+
+    private void viewAvailableVehicles() {
+        List<Vehicle> availableVehicles = vehicleService.getAvailableVehicles();
+        if (availableVehicles.isEmpty()) {
+            System.out.println("No available vehicles at the moment.");
+        } else {
+            System.out.println("Available Vehicles:");
+            for (Vehicle vehicle : availableVehicles) {
+                System.out.println(vehicle);
+            }
         }
     }
 
