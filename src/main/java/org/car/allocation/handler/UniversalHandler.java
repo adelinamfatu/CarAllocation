@@ -116,6 +116,7 @@ public class UniversalHandler {
                         viewAllVehicles();
                         break;
                     case 2:
+                        viewVehiclesByStatus();
                         break;
                     case 3:
                         addNewVehicle();
@@ -144,6 +145,7 @@ public class UniversalHandler {
                         viewAvailableVehicles();
                         break;
                     case 3:
+                        viewVehiclesByStatus();
                         break;
                     case 4:
                         backToMenu = true;
@@ -310,6 +312,25 @@ public class UniversalHandler {
             for (Vehicle vehicle : availableVehicles) {
                 System.out.println(vehicle);
             }
+        }
+    }
+
+    public void viewVehiclesByStatus() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduceti statusul dorit (AVAILABLE, IN_USE, IN_MAINTENANCE, RESERVED):");
+        String statusInput = scanner.nextLine().trim().toUpperCase();
+
+        try {
+            VehicleStatus status = VehicleStatus.valueOf(statusInput);
+            List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
+            if (vehicles.isEmpty()) {
+                System.out.println("Nu exista vehicule cu statusul: " + status);
+            } else {
+                System.out.println("Vehicule cu statusul " + status + ":");
+                vehicles.forEach(vehicle -> System.out.println(vehicle));
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Status invalid. Va rugam reintroduceti un status corect.");
         }
     }
 

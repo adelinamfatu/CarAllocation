@@ -36,6 +36,13 @@ public class VehicleService<T extends Vehicle> {
                 .collect(Collectors.toList());
     }
 
+    public List<Vehicle> getVehiclesByStatus(VehicleStatus status) {
+        List<Vehicle> allVehicles = getAllVehicles();
+        return allVehicles.stream()
+                .filter(vehicle -> vehicle.getVehicleStatus() == status)
+                .collect(Collectors.toList());
+    }
+
     public void addCar(Car car) {
         carRepository.save(car);
     }
