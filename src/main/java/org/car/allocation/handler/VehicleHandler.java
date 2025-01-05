@@ -101,6 +101,8 @@ public class VehicleHandler {
                 System.out.println(messages.getString("truck.added.successfully"));
                 break;
         }
+
+        pause();
     }
 
     public void viewAllVehicles() {
@@ -148,6 +150,8 @@ public class VehicleHandler {
                 });
             });
         }
+
+        pause();
     }
 
     public void viewVehiclesByStatus() {
@@ -167,6 +171,9 @@ public class VehicleHandler {
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid status. Please reintroduce the correct status.");
         }
+
+        pause();
+
     }
 
     public void viewAvailableVehicles() {
@@ -179,6 +186,9 @@ public class VehicleHandler {
                 System.out.println(vehicle);
             }
         }
+
+        pause();
+
     }
 
     public void deleteVehicle() {
@@ -205,6 +215,8 @@ public class VehicleHandler {
         } else {
             System.out.println(messages.getString("invalid.option"));
         }
+
+        pause();
     }
 
     public void updateVehicle() {
@@ -281,6 +293,8 @@ public class VehicleHandler {
             System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
         }
+
+        pause();
     }
 
     private void updateVehicleProperty(Vehicle vehicle, int propertyChoice, String newValue) {
@@ -314,6 +328,8 @@ public class VehicleHandler {
         } else {
             System.out.println("No vehicle available that fits the criteria.");
         }
+
+        pause();
     }
 
     public void releaseVehicle() {
@@ -364,5 +380,16 @@ public class VehicleHandler {
         vehicle.setMileage(newMileage);
         vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); //Change status to available
         System.out.println(messages.getString("vehicle.released") + newMileage);
+
+        pause();
+    }
+
+    private void pause() {
+        try {
+            Thread.sleep(3000); // 3 seconds
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            System.out.println("Failed to pause the thread.");
+        }
     }
 }
