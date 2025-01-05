@@ -1,15 +1,12 @@
 package org.car.allocation.service;
 import org.car.allocation.specification.OperationableSpecification;
 import org.car.allocation.specification.Specification;
-import org.car.allocation.strategy.AllocationStrategy;
+import org.car.allocation.strategy.*;
 
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.VehicleRepository;
-import org.car.allocation.strategy.CargoPriorityStrategy;
-import org.car.allocation.strategy.ComfortPriorityStrategy;
-import org.car.allocation.strategy.FuelEfficientStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,16 +91,37 @@ public class VehicleService<T extends Vehicle> {
         String cargoResponse = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(cargoResponse)) {
-            System.out.println("Enter the minimum cargo capacity required (or -1 for no specific requirement):");
-            double minCargoCapacity = scanner.nextDouble();
-            if (minCargoCapacity > 0) {
-                AllocationStrategy strategy = new CargoPriorityStrategy(minCargoCapacity);
+            System.out.println("Do you need a refrigerated truck? (yes/no)");
+            String refrigerationResponse = scanner.nextLine().trim().toLowerCase();
+
+            if ("yes".equals(refrigerationResponse)) {
+                AllocationStrategy strategy = new RefrigerationStrategy();
                 Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                 if (allocatedVehicle != null) {
                     return allocatedVehicle;
                 }
+
+            } else {
+                System.out.println("Enter the minimum cargo capacity required (or -1 for no specific requirement):");
+                double minCargoCapacity = scanner.nextDouble();
+                if (minCargoCapacity > 0) {
+                    AllocationStrategy strategy = new CargoPriorityStrategy(minCargoCapacity);
+                    Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
+
+                    if (allocatedVehicle != null) {
+                        return allocatedVehicle;
+                    }
+                } else {
+                    AllocationStrategy strategy = new NonRefrigeratedHighSpeedStrategy();
+                    Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
+
+                    if (allocatedVehicle != null) {
+                        return allocatedVehicle;
+                    }
+                }
             }
+
         } else {
             System.out.println("Are you looking for a comfortable car for passengers? (yes/no)");
             String comfortResponse = scanner.nextLine().trim().toLowerCase();

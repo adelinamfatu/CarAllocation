@@ -292,7 +292,8 @@ public class UniversalHandler {
                             ", Model: " + truck.getModel() +
                             ", Fuel Level: " + truck.getFuelLevel() +
                             ", Cargo Capacity: " + truck.getCargoCapacity() +
-                            ", Mileage: " + truck.getMileage());
+                            ", Mileage: " + truck.getMileage() +
+                            ", Has refrigeration unit: " + truck.hasRefrigerationUnit());
                 });
             });
         }
