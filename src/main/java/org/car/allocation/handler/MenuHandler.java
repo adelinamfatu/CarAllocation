@@ -1,27 +1,19 @@
 package org.car.allocation.handler;
 
-import org.car.allocation.abstract_factory.CarFactory;
-import org.car.allocation.abstract_factory.TruckFactory;
-import org.car.allocation.model.Car;
-import org.car.allocation.model.Truck;
 import org.car.allocation.model.User;
 import org.car.allocation.service.UserService;
-import org.car.allocation.util.EngineType;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.service.VehicleService;
 import org.car.allocation.model.Vehicle;
-import org.car.allocation.util.VehicleStatus;
 
 import java.util.*;
 import java.text.MessageFormat;
-import java.util.stream.Collectors;
 
 public class MenuHandler {
     private final Scanner scanner;
     private final UserRole userRole;
     private final VehicleHandler vehicleHandler;
     private final UserService userService = new UserService();
-    private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
 
     public MenuHandler(Scanner scanner, UserRole role) {

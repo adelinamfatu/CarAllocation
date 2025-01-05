@@ -26,34 +26,36 @@ public class VehicleHandler {
     }
 
     public void addNewVehicle() {
-        System.out.println("Enter vehicle type (1. Car, 2. Truck):");
+        System.out.println(messages.getString("add.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
+
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (typeChoice != 1 && typeChoice != 2) {
-            System.out.println("Invalid choice. Returning to menu.");
-            return;
+            System.out.println(messages.getString("returning.menu"));
+            return;  //Exit the method to stop further processing
         }
 
         //Common vehicle properties
-        System.out.println("Enter License Plate:");
+        System.out.println(messages.getString("enter.license"));
         String licensePlate = scanner.nextLine();
 
-        System.out.println("Enter Model:");
+        System.out.println(messages.getString("enter.model"));
         String model = scanner.nextLine();
 
-        System.out.println("Enter Fuel Level:");
+        System.out.println(messages.getString("enter.fuel.level"));
         double fuelLevel = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter Max Speed:");
+        System.out.println(messages.getString("enter.max.speed"));
         double maxSpeed = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter Engine Type (e.g., DIESEL, ELECTRIC):");
+        System.out.println(messages.getString("enter.engine.type"));
         String engineType = scanner.nextLine().toUpperCase();
 
-        System.out.println("Enter Mileage:");
+        System.out.println(messages.getString("enter.mileage"));
         double mileage = scanner.nextDouble();
         scanner.nextLine();
 
@@ -61,62 +63,89 @@ public class VehicleHandler {
 
         switch (typeChoice) {
             case 1: //Car
-                System.out.println("Enter Passenger Capacity:");
+                System.out.println(messages.getString("enter.passenger.capacity"));
                 int passengerCapacity = scanner.nextInt();
                 scanner.nextLine();
 
-                System.out.println("Enter Comfort Level:");
+                System.out.println(messages.getString("enter.comfort.level"));
                 int comfortLevel = scanner.nextInt();
                 scanner.nextLine();
 
                 CarFactory carFactory = new CarFactory(passengerCapacity, comfortLevel);
                 vehicle = carFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addCar((Car) vehicle);
-                System.out.println("Car added successfully.");
+                System.out.println(messages.getString("car.added.successfully"));
                 break;
 
             case 2: //Truck
-                System.out.println("Enter Cargo Capacity:");
+                System.out.println(messages.getString("enter.cargo.capacity"));
                 double cargoCapacity = scanner.nextDouble();
                 scanner.nextLine();
 
-                System.out.println("Does the truck have a refrigeration unit? (yes/no):");
-                boolean hasRefrigerationUnit = scanner.nextLine().trim().equalsIgnoreCase("yes");
+                System.out.println(messages.getString("enter.hasRefrigerationUnit"));
+                String input = scanner.nextLine().trim().toLowerCase();
+                boolean hasRefrigerationUnit;
 
-                TruckFactory truckFactory = new TruckFactory(cargoCapacity, hasRefrigerationUnit);
+                if (input.equals("yes") || input.equals("da")) {
+                    hasRefrigerationUnit = true;
+                } else if (input.equals("no") || input.equals("nu")) {
+                    hasRefrigerationUnit = false;
+                } else {
+                    System.out.println(messages.getString("invalid.input"));
+                    hasRefrigerationUnit = false;
+                }
+
+                TruckFactory truckFactory = new TruckFactory(cargoCapacity,hasRefrigerationUnit);
                 vehicle = truckFactory.createVehicle(licensePlate, model, fuelLevel, maxSpeed, EngineType.valueOf(engineType), mileage);
                 vehicleService.addTruck((Truck) vehicle);
-                System.out.println("Truck added successfully.");
+                System.out.println(messages.getString("truck.added.successfully"));
                 break;
         }
     }
 
     public void viewAllVehicles() {
-        System.out.println("All Vehicles:");
+        System.out.println(messages.getString("all.vehicles"));
 
         //Display all cars grouped by engine type
+        System.out.println(messages.getString("cars.section"));
         List<Car> cars = vehicleService.getAllCars();
         if (cars.isEmpty()) {
-            System.out.println("No cars available.");
+            System.out.println(messages.getString("no.cars.available"));
         } else {
             Map<EngineType, List<Car>> groupedCars = cars.stream()
                     .collect(Collectors.groupingBy(Car::getEngineType));
             groupedCars.forEach((engineType, carList) -> {
                 System.out.println("- Engine Type: " + engineType + ":");
-                carList.forEach(car -> System.out.println(car));
+                carList.forEach(car -> {
+                    System.out.println("  > ID: " + car.getId() + " - License Plate: " + car.getLicensePlate() +
+                            ", Model: " + car.getModel() +
+                            ", Fuel Level: " + car.getFuelLevel() +
+                            ", Passenger Capacity: " + car.getPassengerCapacity() +
+                            ", Mileage: " + car.getMileage() +
+                            ", Status: " + car.getVehicleStatus());
+                });
             });
         }
 
         //Display all trucks grouped by engine type
+        System.out.println(messages.getString("trucks.section"));
         List<Truck> trucks = vehicleService.getAllTrucks();
         if (trucks.isEmpty()) {
-            System.out.println("No trucks available.");
+            System.out.println(messages.getString("no.trucks.available"));
         } else {
             Map<EngineType, List<Truck>> groupedTrucks = trucks.stream()
                     .collect(Collectors.groupingBy(Truck::getEngineType));
             groupedTrucks.forEach((engineType, truckList) -> {
                 System.out.println("- Engine Type: " + engineType + ":");
-                truckList.forEach(truck -> System.out.println(truck));
+                truckList.forEach(truck -> {
+                    System.out.println("  > ID: " + truck.getId() + " - License Plate: " + truck.getLicensePlate() +
+                            ", Model: " + truck.getModel() +
+                            ", Fuel Level: " + truck.getFuelLevel() +
+                            ", Cargo Capacity: " + truck.getCargoCapacity() +
+                            ", Mileage: " + truck.getMileage() +
+                            ", Has refrigeration unit: " + truck.hasRefrigerationUnit() +
+                            ", Status: " + truck.getVehicleStatus());
+                });
             });
         }
     }
@@ -153,24 +182,28 @@ public class VehicleHandler {
     }
 
     public void deleteVehicle() {
-        System.out.println("Enter vehicle type to delete (1. Car, 2. Truck):");
+        viewAllVehicles();
+        System.out.println(messages.getString("delete.vehicle.prompt"));
+        System.out.println(messages.getString("vehicle.type.prompt"));
+
         int typeChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (typeChoice == 1 || typeChoice == 2) {
-            System.out.println("Enter Vehicle ID to delete:");
+            System.out.println(messages.getString("vehicle.id.prompt.delete"));
             int vehicleId = scanner.nextInt();
             scanner.nextLine();
 
             boolean success = (typeChoice == 1) ? vehicleService.deleteCarById(vehicleId) : vehicleService.deleteTruckById(vehicleId);
 
             if (success) {
-                System.out.println("Vehicle deleted successfully.");
+                System.out.println(messages.getString("vehicle.deleted.successfully"));
+                viewAllVehicles();
             } else {
-                System.out.println("No vehicle found with ID: " + vehicleId);
+                System.out.println("No vehicle found with ID: " + vehicleId + " or error occurred during deletion.");
             }
         } else {
-            System.out.println("Invalid option.");
+            System.out.println(messages.getString("invalid.option"));
         }
     }
 
