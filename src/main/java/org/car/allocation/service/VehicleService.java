@@ -7,6 +7,7 @@ import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.VehicleRepository;
+import org.car.allocation.util.VehicleStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
+    private final VehicleRepository<Vehicle> vehicleRepository = new VehicleRepository<>(Vehicle.class);
 
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
@@ -68,6 +70,7 @@ public class VehicleService<T extends Vehicle> {
     public void updateCar(Car car) { carRepository.update(car); }
 
     public void updateTruck(Truck truck) { truckRepository.update(truck); }
+    public void updateVehicle(Vehicle vehicle) { vehicleRepository.update(vehicle); }
 
     public Vehicle allocateVehicle() {
         //Gather all vehicles
@@ -99,6 +102,9 @@ public class VehicleService<T extends Vehicle> {
                 Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                 if (allocatedVehicle != null) {
+                    // Notify all observers that the vehicle status has changed to IN_USE
+                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
+                    updateVehicle(allocatedVehicle);
                     return allocatedVehicle;
                 }
 
@@ -110,6 +116,9 @@ public class VehicleService<T extends Vehicle> {
                     Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                     if (allocatedVehicle != null) {
+                        // Notify all observers that the vehicle status has changed to IN_USE
+                        allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
+                        updateVehicle(allocatedVehicle);
                         return allocatedVehicle;
                     }
                 } else {
@@ -117,6 +126,9 @@ public class VehicleService<T extends Vehicle> {
                     Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                     if (allocatedVehicle != null) {
+                        // Notify all observers that the vehicle status has changed to IN_USE
+                        allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
+                        updateVehicle(allocatedVehicle);
                         return allocatedVehicle;
                     }
                 }
@@ -134,6 +146,9 @@ public class VehicleService<T extends Vehicle> {
                 Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                 if (allocatedVehicle != null) {
+                    // Notify all observers that the vehicle status has changed to IN_USE
+                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
+                    updateVehicle(allocatedVehicle);
                     return allocatedVehicle;
                 }
             } else {
@@ -141,6 +156,9 @@ public class VehicleService<T extends Vehicle> {
                 Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
 
                 if (allocatedVehicle != null) {
+                    // Notify all observers that the vehicle status has changed to IN_USE
+                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
+                    updateVehicle(allocatedVehicle);
                     return allocatedVehicle;
                 }
             }
