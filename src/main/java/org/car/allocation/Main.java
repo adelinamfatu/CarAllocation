@@ -1,6 +1,7 @@
 package org.car.allocation;
 
 import org.car.allocation.handler.MenuHandler;
+import org.car.allocation.handler.UserHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.car.allocation.util.HibernateUtil;
@@ -26,22 +27,33 @@ public class Main {
 
     private static void showMainMenu() {
         Scanner scanner = new Scanner(System.in);
+        UserHandler userHandler = new UserHandler(scanner);
 
         boolean exit = false;
 
         while (!exit) {
             System.out.println("\nPlease choose an option:");
-            System.out.println("1. Login");
-            System.out.println("2. Sign In (Create a new user)");
-            System.out.println("3. Exit");
+            System.out.println("1. Login as Driver");
+            System.out.println("2. Login as Manager");
+            System.out.println("3. Login as Admin");
+            System.out.println("4. Sign In (Create a new user)");
+            System.out.println("5. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); //Consume newline
+            scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
-                    //Login
-                    System.out.println("Choose your role:");
+                    userHandler.handleLogin(UserRole.DRIVER);
+                    break;
+                case 2:
+                    userHandler.handleLogin(UserRole.MANAGER);
+                    break;
+                case 3:
+                    userHandler.handleLogin(UserRole.ADMIN);
+                    break;
+                case 4:
+                    System.out.println("Select role for new user:");
                     System.out.println("1. Driver");
                     System.out.println("2. Manager");
                     System.out.println("3. Admin");
@@ -50,50 +62,23 @@ public class Main {
 
                     switch (roleChoice) {
                         case 1:
-                            new MenuHandler(scanner, UserRole.DRIVER).handleLogin();
+                            userHandler.handleSignIn(UserRole.DRIVER);
                             break;
                         case 2:
-                            new MenuHandler(scanner, UserRole.MANAGER).handleLogin();
+                            userHandler.handleSignIn(UserRole.MANAGER);
                             break;
                         case 3:
-                            new MenuHandler(scanner, UserRole.ADMIN).handleLogin();
+                            userHandler.handleSignIn(UserRole.ADMIN);
                             break;
                         default:
                             System.out.println("Invalid role selected.");
                             break;
                     }
                     break;
-
-                case 2:
-                    //Sign In (Create new user)
-                    System.out.println("Choose your role for Sign In:");
-                    System.out.println("1. Driver");
-                    System.out.println("2. Manager");
-                    System.out.println("3. Admin");
-                    roleChoice = scanner.nextInt();
-                    scanner.nextLine(); //Consume newline
-
-                    switch (roleChoice) {
-                        case 1:
-                            new MenuHandler(scanner, UserRole.DRIVER).handleSignIn();
-                            break;
-                        case 2:
-                            new MenuHandler(scanner, UserRole.MANAGER).handleSignIn();
-                            break;
-                        case 3:
-                            new MenuHandler(scanner, UserRole.ADMIN).handleSignIn();
-                            break;
-                        default:
-                            System.out.println("Invalid role selected.");
-                            break;
-                    }
-                    break;
-
-                case 3:
+                case 5:
                     System.out.println("Exiting the system...");
                     exit = true;
                     break;
-
                 default:
                     System.out.println("Invalid option, please try again.");
                     break;
