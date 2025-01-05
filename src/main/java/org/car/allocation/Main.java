@@ -7,17 +7,17 @@ import org.hibernate.SessionFactory;
 import org.car.allocation.util.HibernateUtil;
 import org.car.allocation.util.UserRole;
 
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Main {
+    private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
+
     public static void main(String[] args) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-        System.out.println("********************************************************");
-        System.out.println("WELCOME TO THE VEHICLE ALLOCATION SYSTEM");
-        System.out.println("This system will help you manage vehicle availability.");
-        System.out.println("********************************************************");
+        System.out.println(messages.getString("system.welcome"));
 
         showMainMenu();
 
@@ -32,12 +32,12 @@ public class Main {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("\nPlease choose an option:");
-            System.out.println("1. Login as Driver");
-            System.out.println("2. Login as Manager");
-            System.out.println("3. Login as Admin");
-            System.out.println("4. Sign In (Create a new user)");
-            System.out.println("5. Exit");
+            System.out.println("\n" + messages.getString("main.option.prompt"));
+            System.out.println(messages.getString("main.option.login_driver"));
+            System.out.println(messages.getString("main.option.login_manager"));
+            System.out.println(messages.getString("main.option.login_admin"));
+            System.out.println(messages.getString("main.option.signin"));
+            System.out.println(messages.getString("main.option.exit"));
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -53,7 +53,7 @@ public class Main {
                     userHandler.handleLogin(UserRole.ADMIN);
                     break;
                 case 4:
-                    System.out.println("Select role for new user:");
+                    System.out.println(messages.getString("main.select_role"));
                     System.out.println("1. Driver");
                     System.out.println("2. Manager");
                     System.out.println("3. Admin");
@@ -71,16 +71,16 @@ public class Main {
                             userHandler.handleSignIn(UserRole.ADMIN);
                             break;
                         default:
-                            System.out.println("Invalid role selected.");
+                            System.out.println(messages.getString("main.invalid_role"));
                             break;
                     }
                     break;
                 case 5:
-                    System.out.println("Exiting the system...");
+                    System.out.println(messages.getString("main.exiting"));
                     exit = true;
                     break;
                 default:
-                    System.out.println("Invalid option, please try again.");
+                    System.out.println(messages.getString("invalid.option"));
                     break;
             }
         }
