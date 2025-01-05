@@ -1,4 +1,5 @@
 package org.car.allocation.service;
+import org.car.allocation.handler.VehicleAllocationHandler;
 import org.car.allocation.specification.OperationableSpecification;
 import org.car.allocation.specification.Specification;
 import org.car.allocation.strategy.*;
@@ -20,7 +21,7 @@ public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
     private final VehicleRepository<Vehicle> vehicleRepository = new VehicleRepository<>(Vehicle.class);
 
-    // Utility method to gather all vehicles from the repository
+    //Utility method to gather all vehicles from the repository
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
         vehicles.addAll(carRepository.findAll());
@@ -28,7 +29,7 @@ public class VehicleService<T extends Vehicle> {
         return vehicles;
     }
 
-    // Method to get all available vehicles
+    //Get all available vehicles
     public List<Vehicle> getAvailableVehicles() {
         List<Vehicle> allVehicles = getAllVehicles();
         return allVehicles.stream()
@@ -92,95 +93,66 @@ public class VehicleService<T extends Vehicle> {
         //Gather all vehicles
         List<Vehicle> allVehicles = getAllVehicles();
 
-        //Filter available vehicles
+        //Create the specification for operational vehicles (e.g., minimum fuel level)
         Specification<Vehicle> operationalSpec = new OperationableSpecification(50.0);
-        List<Vehicle> availableVehicles = allVehicles.stream()
-                .filter(operationalSpec::isSatisfiedBy)
-                .collect(Collectors.toList());
 
-        if (availableVehicles.isEmpty()) {
-            System.out.println("No available vehicles that meet the operational requirements.");
-            return null;
+        // Initialize the allocation handler with the chosen specification (filter) and the appropriate strategy
+        VehicleAllocationHandler allocationHandler = new VehicleAllocationHandler(selectStrategy(allVehicles), operationalSpec);
+
+        //Use the handler to filter and allocate the vehicle
+        Vehicle allocatedVehicle = allocationHandler.allocateVehicle(allVehicles);
+
+        if (allocatedVehicle != null) {
+            //Update the vehicle status and notify observers
+            allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);
+            updateVehicle(allocatedVehicle);
+            return allocatedVehicle;
         }
 
-        //Ask user needs-based questions
+        System.out.println("No vehicle could be allocated with the selected strategies.");
+        return null;
+    }
+
+    private AllocationStrategy selectStrategy(List<Vehicle> availableVehicles) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Do you need to transport cargo? (yes/no)");
         String cargoResponse = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(cargoResponse)) {
-            System.out.println("Do you need a refrigerated truck? (yes/no)");
-            String refrigerationResponse = scanner.nextLine().trim().toLowerCase();
-
-            if ("yes".equals(refrigerationResponse)) {
-                AllocationStrategy strategy = new RefrigerationStrategy();
-                Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
-
-                if (allocatedVehicle != null) {
-                    // Notify all observers that the vehicle status has changed to IN_USE
-                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
-                    updateVehicle(allocatedVehicle);
-                    return allocatedVehicle;
-                }
-
-            } else {
-                System.out.println("Enter the minimum cargo capacity required (or -1 for no specific requirement):");
-                double minCargoCapacity = scanner.nextDouble();
-                if (minCargoCapacity > 0) {
-                    AllocationStrategy strategy = new CargoPriorityStrategy(minCargoCapacity);
-                    Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
-
-                    if (allocatedVehicle != null) {
-                        // Notify all observers that the vehicle status has changed to IN_USE
-                        allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
-                        updateVehicle(allocatedVehicle);
-                        return allocatedVehicle;
-                    }
-                } else {
-                    AllocationStrategy strategy = new NonRefrigeratedHighSpeedStrategy();
-                    Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
-
-                    if (allocatedVehicle != null) {
-                        // Notify all observers that the vehicle status has changed to IN_USE
-                        allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
-                        updateVehicle(allocatedVehicle);
-                        return allocatedVehicle;
-                    }
-                }
-            }
-
+            return handleCargoRequest(scanner);
         } else {
-            System.out.println("Are you looking for a comfortable car for passengers? (yes/no)");
-            String comfortResponse = scanner.nextLine().trim().toLowerCase();
+            return handlePassengerRequest(scanner);
+        }
+    }
 
-            if ("yes".equals(comfortResponse)) {
-                System.out.println("Enter the minimum passenger capacity required:");
-                int minPassengerCapacity = scanner.nextInt();
+    private AllocationStrategy handleCargoRequest(Scanner scanner) {
+        System.out.println("Do you need a refrigerated truck? (yes/no)");
+        String refrigerationResponse = scanner.nextLine().trim().toLowerCase();
 
-                AllocationStrategy strategy = new ComfortPriorityStrategy(minPassengerCapacity);
-                Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
-
-                if (allocatedVehicle != null) {
-                    // Notify all observers that the vehicle status has changed to IN_USE
-                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
-                    updateVehicle(allocatedVehicle);
-                    return allocatedVehicle;
-                }
+        if ("yes".equals(refrigerationResponse)) {
+            return new RefrigerationStrategy();
+        } else {
+            System.out.println("Enter the minimum cargo capacity required (or -1 for no specific requirement):");
+            double minCargoCapacity = scanner.nextDouble();
+            if (minCargoCapacity > 0) {
+                return new CargoPriorityStrategy(minCargoCapacity);
             } else {
-                AllocationStrategy strategy = new FuelEfficientStrategy();
-                Vehicle allocatedVehicle = strategy.allocate(availableVehicles);
-
-                if (allocatedVehicle != null) {
-                    // Notify all observers that the vehicle status has changed to IN_USE
-                    allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);  // This should trigger the observer
-                    updateVehicle(allocatedVehicle);
-                    return allocatedVehicle;
-                }
+                return new NonRefrigeratedHighSpeedStrategy();
             }
         }
+    }
 
-        System.out.println("No vehicle could be allocated with the selected strategies.");
-        return null;
+    private AllocationStrategy handlePassengerRequest(Scanner scanner) {
+        System.out.println("Are you looking for a comfortable car for passengers? (yes/no)");
+        String comfortResponse = scanner.nextLine().trim().toLowerCase();
+
+        if ("yes".equals(comfortResponse)) {
+            System.out.println("Enter the minimum passenger capacity required:");
+            int minPassengerCapacity = scanner.nextInt();
+            return new ComfortPriorityStrategy(minPassengerCapacity);
+        } else {
+            return new FuelEfficientStrategy();
+        }
     }
 }

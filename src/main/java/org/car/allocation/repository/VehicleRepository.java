@@ -38,15 +38,4 @@ public class VehicleRepository<T extends Vehicle> {
     public void delete(T entity) {
         DatabaseUtil.executeTransaction(session -> session.delete(entity));
     }
-
-    public List<T> findByEngineType(String engineType) {
-        try (Session session = DatabaseUtil.openSession()) {
-            String query = "from " + type.getSimpleName() + " v where v.engineType = :engineType";
-            return session.createQuery(query, type)
-                    .setParameter("engineType", engineType)
-                    .list();
-        }
-    }
-
-
 }
