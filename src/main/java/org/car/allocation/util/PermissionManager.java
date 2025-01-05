@@ -3,11 +3,10 @@ package org.car.allocation.util;
 import java.util.*;
 
 public class PermissionManager {
-
     private static final Map<UserRole, Map<VehicleStatus, List<String>>> permissions = new HashMap<>();
 
     static {
-        // Define permissions
+        //Define permissions
         Map<VehicleStatus, List<String>> driverPermissions = new HashMap<>();
         driverPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("VIEW", "RESERVE"));
         driverPermissions.put(VehicleStatus.IN_USE, Arrays.asList("DENY_VIEW"));

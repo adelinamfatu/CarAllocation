@@ -9,7 +9,6 @@ import org.car.allocation.util.UserRole;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();

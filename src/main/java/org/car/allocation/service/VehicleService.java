@@ -2,6 +2,7 @@ package org.car.allocation.service;
 import org.car.allocation.handler.VehicleAllocationHandler;
 import org.car.allocation.specification.OperationableSpecification;
 import org.car.allocation.specification.Specification;
+import org.car.allocation.specification.VehicleStatusSpecification;
 import org.car.allocation.strategy.*;
 
 import org.car.allocation.model.Car;
@@ -31,16 +32,20 @@ public class VehicleService<T extends Vehicle> {
 
     //Get all available vehicles
     public List<Vehicle> getAvailableVehicles() {
+        Specification<Vehicle> specification = new VehicleStatusSpecification(VehicleStatus.AVAILABLE);
+
         List<Vehicle> allVehicles = getAllVehicles();
         return allVehicles.stream()
-                .filter(vehicle -> vehicle.getVehicleStatus() == VehicleStatus.AVAILABLE)
+                .filter(specification::isSatisfiedBy)
                 .collect(Collectors.toList());
     }
 
     public List<Vehicle> getVehiclesByStatus(VehicleStatus status) {
+        Specification<Vehicle> specification = new VehicleStatusSpecification(status);
+
         List<Vehicle> allVehicles = getAllVehicles();
         return allVehicles.stream()
-                .filter(vehicle -> vehicle.getVehicleStatus() == status)
+                .filter(specification::isSatisfiedBy)
                 .collect(Collectors.toList());
     }
 

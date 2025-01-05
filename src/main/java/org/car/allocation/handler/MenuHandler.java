@@ -3,9 +3,6 @@ package org.car.allocation.handler;
 import org.car.allocation.model.User;
 import org.car.allocation.service.UserService;
 import org.car.allocation.util.UserRole;
-import org.car.allocation.service.VehicleService;
-import org.car.allocation.model.Vehicle;
-
 import java.util.*;
 import java.text.MessageFormat;
 
@@ -59,7 +56,6 @@ public class MenuHandler {
 
         System.out.println(messages.getString("login.password.prompt"));
         String password = scanner.nextLine();
-
 
         UserService userService = new UserService();
         UserRole role = UserRole.DRIVER;

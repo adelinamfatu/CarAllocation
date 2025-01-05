@@ -1,7 +1,7 @@
 package org.car.allocation.repository;
 
 import org.car.allocation.model.User;
-import org.car.allocation.util.DatabaseUtil;
+import org.car.allocation.singleton.DatabaseUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import java.util.List;
