@@ -10,12 +10,15 @@ public class MenuHandler {
     private final Scanner scanner;
     private final UserRole userRole;
     private final VehicleHandler vehicleHandler;
+    private final UserHandler userHandler;
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
 
-    public MenuHandler(Scanner scanner, UserRole role) {
+    public MenuHandler(Scanner scanner, UserRole role, UserHandler userHandler) {
         this.scanner = scanner;
         this.userRole = role;
         this.vehicleHandler = new VehicleHandler(scanner, userRole);
+        //this.userHandler = new UserHandler(scanner);
+        this.userHandler = userHandler;
     }
 
     private void showAdminOptions() {
@@ -45,6 +48,9 @@ public class MenuHandler {
                     vehicleHandler.allocateVehicle();
                     break;
                 case 7:
+                    userHandler.updateUserDetails();
+                    break;
+                case 8:
                     backToMenu = true;
                     break;
                 default:
@@ -69,12 +75,18 @@ public class MenuHandler {
                     vehicleHandler.viewVehiclesByStatus();
                     break;
                 case 3:
-                    backToMenu = true;
+                    // alocarea unui vehicul
                     break;
                 case 4:
                     System.out.println("Introduceți numele vehiculului pe care doriți să-l puneți în mentenanță:");
                     String licensePlate = scanner.nextLine();
                     vehicleHandler.putVehicleInMaintenanceByLicensePlate(licensePlate,UserRole.MANAGER);
+                    break;
+                case 5:
+                    userHandler.updateUserDetails();
+                    break;
+                case 6:
+                    backToMenu = true;
                     break;
                 default:
                     System.out.println(messages.getString("invalid.option"));
@@ -98,6 +110,9 @@ public class MenuHandler {
                     vehicleHandler.releaseVehicle();
                     break;
                 case 3:
+                    userHandler.updateUserDetails();
+                    break;
+                case 4:
                     backToMenu = true;
                     break;
                 default:
