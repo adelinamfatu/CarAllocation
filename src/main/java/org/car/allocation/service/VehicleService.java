@@ -9,6 +9,8 @@ import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.VehicleRepository;
+import org.car.allocation.util.PermissionManager;
+import org.car.allocation.util.UserRole;
 import org.car.allocation.util.VehicleStatus;
 
 import java.util.ArrayList;
@@ -160,4 +162,5 @@ public class VehicleService<T extends Vehicle> {
             return new FuelEfficientStrategy();
         }
     }
+
 }

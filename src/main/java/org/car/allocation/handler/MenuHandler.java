@@ -71,6 +71,11 @@ public class MenuHandler {
                 case 3:
                     backToMenu = true;
                     break;
+                case 4:
+                    System.out.println("Introduceți numele vehiculului pe care doriți să-l puneți în mentenanță:");
+                    String licensePlate = scanner.nextLine();
+                    vehicleHandler.putVehicleInMaintenanceByLicensePlate(licensePlate,UserRole.MANAGER);
+                    break;
                 default:
                     System.out.println(messages.getString("invalid.option"));
                     break;

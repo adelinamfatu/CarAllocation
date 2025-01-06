@@ -13,10 +13,11 @@ public class PermissionManager {
         driverPermissions.put(VehicleStatus.IN_MAINTENANCE, Arrays.asList("DENY_VIEW"));
 
         Map<VehicleStatus, List<String>> managerPermissions = new HashMap<>();
-        managerPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("RESERVE"));
-        managerPermissions.put(VehicleStatus.IN_USE, Arrays.asList("DENY_RESERVE"));
-        managerPermissions.put(VehicleStatus.IN_MAINTENANCE, Arrays.asList("DENY_RESERVE"));
-        managerPermissions.put(VehicleStatus.RESERVED, Arrays.asList("DENY_RESERVE"));
+        managerPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("RESERVE", "PUT_IN_MAINTENANCE"));
+        managerPermissions.put(VehicleStatus.IN_USE, Arrays.asList("DENY_RESERVE", "DENY_PUT_IN_MAINTENANCE"));
+        managerPermissions.put(VehicleStatus.IN_MAINTENANCE, Arrays.asList("RESERVE", "DENY_PUT_IN_MAINTENANCE"));
+        managerPermissions.put(VehicleStatus.RESERVED, Arrays.asList("DENY_RESERVE", "DENY_PUT_IN_MAINTENANCE"));
+
 
         Map<VehicleStatus, List<String>> adminPermissions = new HashMap<>();
         adminPermissions.put(VehicleStatus.AVAILABLE, Arrays.asList("FULL_ACCESS"));

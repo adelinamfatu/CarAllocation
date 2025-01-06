@@ -185,4 +185,16 @@ public abstract class Vehicle {
         statusNotifier.notifyObservers("Vehicle released and available with new mileage: " + newMileage);
     }
 
+    public void putInMaintenance() {
+        if (this.vehicleStatus != VehicleStatus.IN_MAINTENANCE) {
+            setVehicleStatus(VehicleStatus.IN_MAINTENANCE);
+            statusNotifier.notifyObservers("Vehicle has been put into maintenance.");
+            System.out.println("Vehiculul a fost pus în mentenanță.");
+        } else {
+            System.out.println("Vehiculul este deja în mentenanță.");
+        }
+    }
+
+
+
 }

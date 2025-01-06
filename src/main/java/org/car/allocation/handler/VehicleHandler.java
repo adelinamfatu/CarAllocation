@@ -7,6 +7,7 @@ import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.service.VehicleService;
 import org.car.allocation.util.EngineType;
+import org.car.allocation.util.PermissionManager;
 import org.car.allocation.util.UserRole;
 import org.car.allocation.util.VehicleStatus;
 
@@ -256,8 +257,8 @@ public class VehicleHandler {
 
             System.out.println(messages.getString("vehicle.property"));
             String[] properties = (vehicle instanceof Car) ?
-                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity", "Mileage"} :
-                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity", "Mileage"};
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Passenger Capacity", "Mileage", "Put in Maintenance"} :
+                    new String[]{"License Plate", "Model", "Fuel Level", "Engine Type", "Cargo Capacity", "Mileage", "Put in Maintenance"};
 
             for (int i = 0; i < properties.length; i++) {
                 System.out.printf("%d. %s\n", (i + 1), properties[i]);
@@ -271,24 +272,34 @@ public class VehicleHandler {
                 return;
             }
 
-            String property = properties[propertyChoice - 1];
-            System.out.println(MessageFormat.format(messages.getString("new.value.prompt"), property));
-            String newValue = scanner.nextLine();
+            if (propertyChoice == properties.length) {
+                System.out.println("Are you sure you want to put the vehicle in maintenance? (yes/no)");
+                String confirmation = scanner.nextLine().trim().toLowerCase();
 
-            //Apply updates based on choice
-            if (propertyChoice == properties.length) { //Last property is Mileage
-                vehicle.setMileage(Double.parseDouble(newValue));
+                if ("yes".equals(confirmation)) {
+                    putVehicleInMaintenanceByLicensePlate(vehicle.getLicensePlate(), userRole);
+                }
             } else {
-                updateVehicleProperty(vehicle, propertyChoice, newValue);
-            }
+                String property = properties[propertyChoice - 1];
+                System.out.println(MessageFormat.format(messages.getString("new.value.prompt"), property));
+                String newValue = scanner.nextLine();
 
-            if (vehicle instanceof Car) {
-                vehicleService.updateCar((Car) vehicle);
-            } else if (vehicle instanceof Truck) {
-                vehicleService.updateTruck((Truck) vehicle);
-            }
+                if (propertyChoice == properties.length - 1) {
+                    putVehicleInMaintenanceByLicensePlate(vehicle.getLicensePlate(), userRole);
+                } else if (propertyChoice == properties.length) {
+                    vehicle.setMileage(Double.parseDouble(newValue));
+                } else {
+                    updateVehicleProperty(vehicle, propertyChoice, newValue);
+                }
 
-            System.out.println(messages.getString("vehicle.updated") + vehicle);
+                if (vehicle instanceof Car) {
+                    vehicleService.updateCar((Car) vehicle);
+                } else if (vehicle instanceof Truck) {
+                    vehicleService.updateTruck((Truck) vehicle);
+                }
+
+                System.out.println(messages.getString("vehicle.updated") + vehicle);
+            }
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
@@ -296,6 +307,7 @@ public class VehicleHandler {
 
         pause();
     }
+
 
     private void updateVehicleProperty(Vehicle vehicle, int propertyChoice, String newValue) {
         switch (propertyChoice) {
@@ -392,4 +404,27 @@ public class VehicleHandler {
             System.out.println("Failed to pause the thread.");
         }
     }
+
+    public void putVehicleInMaintenanceByLicensePlate(String licensePlate, UserRole userRole) {
+        List<Vehicle> allVehicles = vehicleService.getAllVehicles();
+        Optional<Vehicle> vehicleOpt = allVehicles.stream()
+                .filter(vehicle -> vehicle.getLicensePlate().equalsIgnoreCase(licensePlate))  // Căutăm vehiculul după numărul de înmatriculare
+                .findFirst();
+
+        if (vehicleOpt.isPresent()) {
+            Vehicle vehicle = vehicleOpt.get();
+
+            if (PermissionManager.isActionAllowed(userRole, vehicle.getVehicleStatus(), "PUT_IN_MAINTENANCE")) {
+                vehicle.putInMaintenance();
+                vehicleService.updateVehicle(vehicle);
+            } else {
+                System.out.println("Permisiune refuzată: Nu aveți permisiunea de a pune acest vehicul în mentenanță.");
+            }
+        } else {
+            System.out.println("Vehiculul cu numărul de înmatriculare " + licensePlate + " nu a fost găsit.");
+        }
+    }
+
+
+
 }
