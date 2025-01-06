@@ -48,21 +48,61 @@ public class UserHandler {
         System.out.println(messages.getString("signin.lastname"));
         String lastName = scanner.nextLine();
 
-        System.out.println(messages.getString("signin.email"));
-        String email = scanner.nextLine();
+        String email = "";
+        while (true) {
+            System.out.println(messages.getString("signin.email"));
+            email = scanner.nextLine();
+            if (isValidEmail(email)) {
+                break;
+            } else {
+                System.out.println("Email invalid. Vă rugăm să introduceți un email valid.");
+            }
+        }
 
-        System.out.println(messages.getString("signin.phone_number"));
-        String phoneNumber = scanner.nextLine();
+        String phoneNumber = "";
+        while (true) {
+            System.out.println(messages.getString("signin.phone_number"));
+            phoneNumber = scanner.nextLine();
+            if (isValidPhoneNumber(phoneNumber)) {
+                break;
+            } else {
+                System.out.println("Număr de telefon invalid. Vă rugăm să introduceți un număr valid.");
+            }
+        }
 
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
 
-        System.out.println(messages.getString("login.password.prompt"));
-        String password = scanner.nextLine();
+        String password = "";
+        while (true) {
+            System.out.println(messages.getString("login.password.prompt"));
+            password = scanner.nextLine();
+            if (isValidPassword(password)) {
+                break;
+            } else {
+                System.out.println("Parolă invalidă. Vă rugăm să introduceți o parolă validă.");
+            }
+        }
 
         userService.createUser(firstName, lastName, email, phoneNumber, username, password, role);
-
         System.out.println(messages.getString("signin.successful"));
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(emailRegex);
+    }
+
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        String phoneRegex = "^(\\+?[0-9]{1,3})?([0-9]{10})$";
+        return phoneNumber.matches(phoneRegex);
+    }
+
+
+    private boolean isValidPassword(String password) {
+        String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$";
+        return password.matches(passwordRegex);
     }
 
     private void showPermissions(UserRole role) {
