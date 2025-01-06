@@ -6,6 +6,7 @@ import org.car.allocation.util.UserRole;
 import java.util.Scanner;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserHandler {
     private final Scanner scanner;
@@ -25,10 +26,14 @@ public class UserHandler {
 
         User user = userService.findUserByUsername(username).orElse(null);
 
-        if (user != null && user.getPassword().equals(password) && user.getRole() == role) {
-            System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, role));
-            showPermissions(role);
-            new MenuHandler(scanner, role).showOptions();
+        if (user!=null) {
+            if (BCrypt.checkpw(password, user.getPassword())) {
+                System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, role));
+                showPermissions(role);
+                new MenuHandler(scanner, role).showOptions();
+
+            }
+
         } else {
             System.out.println(messages.getString("login.invalid"));
         }

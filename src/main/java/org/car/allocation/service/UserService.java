@@ -6,6 +6,7 @@ import org.car.allocation.util.UserRole;
 
 import java.util.List;
 import java.util.Optional;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
 
@@ -40,8 +41,10 @@ public class UserService {
         userRepository.update(user);
     }
 
+
     public void createUser(String firstName, String lastName, String email, String phoneNumber, String username, String password, UserRole role) {
-        User newUser = new User(role, firstName, lastName, email, phoneNumber, username, password, null, null);
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        User newUser = new User(role, firstName, lastName, email, phoneNumber, username, hashedPassword, null, null);
         addUser(newUser);
     }
 }
