@@ -26,14 +26,14 @@ public class UserHandler {
 
         User user = userService.findUserByUsername(username).orElse(null);
 
-        if (user!=null) {
-            if (BCrypt.checkpw(password, user.getPassword())) {
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            if (user.getRole() == role) {
                 System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, role));
                 showPermissions(role);
                 new MenuHandler(scanner, role).showOptions();
-
+            } else {
+                System.out.println(MessageFormat.format(messages.getString("login.unauthorized"), role));
             }
-
         } else {
             System.out.println(messages.getString("login.invalid"));
         }
