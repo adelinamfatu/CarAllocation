@@ -392,6 +392,8 @@ public class VehicleHandler {
         vehicle.setMileage(newMileage);
         vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); //Change status to available
         System.out.println(messages.getString("vehicle.released") + newMileage);
+        vehicleService.updateVehicle(vehicle);
+
 
         pause();
     }
