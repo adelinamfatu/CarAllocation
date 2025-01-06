@@ -17,7 +17,6 @@ public class MenuHandler {
         this.scanner = scanner;
         this.userRole = role;
         this.vehicleHandler = new VehicleHandler(scanner, userRole);
-        //this.userHandler = new UserHandler(scanner);
         this.userHandler = userHandler;
     }
 

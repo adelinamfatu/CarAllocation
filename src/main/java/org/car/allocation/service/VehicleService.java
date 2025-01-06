@@ -1,5 +1,6 @@
 package org.car.allocation.service;
 import org.car.allocation.handler.VehicleAllocationHandler;
+import org.car.allocation.model.User;
 import org.car.allocation.specification.OperationableSpecification;
 import org.car.allocation.specification.Specification;
 import org.car.allocation.specification.VehicleStatusSpecification;
@@ -23,6 +24,11 @@ public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
     private final VehicleRepository<Vehicle> vehicleRepository = new VehicleRepository<>(Vehicle.class);
+
+    private final UserService userService;
+    public VehicleService() {
+        this.userService = new UserService();
+    }
 
     //Utility method to gather all vehicles from the repository
     public List<Vehicle> getAllVehicles() {
@@ -109,15 +115,26 @@ public class VehicleService<T extends Vehicle> {
         //Use the handler to filter and allocate the vehicle
         Vehicle allocatedVehicle = allocationHandler.allocateVehicle(allVehicles);
 
-        if (allocatedVehicle != null) {
-            //Update the vehicle status and notify observers
-            allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);
-            updateVehicle(allocatedVehicle);
-            return allocatedVehicle;
+        if (allocatedVehicle == null) {
+            System.out.println("No vehicle could be allocated with the selected strategies.");
+            return null;
         }
 
-        System.out.println("No vehicle could be allocated with the selected strategies.");
-        return null;
+        // Check if there is an available driver
+        Optional<User> availableDriver = userService.findAvailableDriver();
+        if (!availableDriver.isPresent()) {
+            System.out.println("No available driver to allocate to vehicle.");
+            return null;
+        }
+
+        // If a driver is available, proceed to allocate the vehicle and update statuses
+        userService.allocateVehicleToDriver(availableDriver.get(), allocatedVehicle);
+        allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);
+        updateVehicle(allocatedVehicle);
+
+        System.out.println("Vehicle with ID " + allocatedVehicle.getId() + " has been allocated to driver " + availableDriver.get().getUsername() + " (" + availableDriver.get().getFirstName() + " " + availableDriver.get().getLastName() + ")");
+        return allocatedVehicle;
+
     }
 
     private AllocationStrategy selectStrategy(List<Vehicle> availableVehicles) {

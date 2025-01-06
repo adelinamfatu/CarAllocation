@@ -1,11 +1,18 @@
 package org.car.allocation.service;
 
+import org.car.allocation.model.Car;
+import org.car.allocation.model.Truck;
 import org.car.allocation.model.User;
+import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.UserRepository;
+import org.car.allocation.singleton.DatabaseUtil;
 import org.car.allocation.util.UserRole;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.car.allocation.util.VehicleStatus;
+import org.hibernate.Session;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
@@ -46,5 +53,29 @@ public class UserService {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User newUser = new User(role, firstName, lastName, email, phoneNumber, username, hashedPassword, null, null);
         addUser(newUser);
+    }
+
+
+    public Optional<User> findAvailableDriver() {
+        try (Session session = DatabaseUtil.openSession()) {
+            List<User> drivers = session.createQuery("from User u where u.role = :role and u.car is null and u.truck is null", User.class)
+                    .setParameter("role", UserRole.DRIVER)
+                    .list();
+
+            return drivers.stream().findFirst(); // first driver available
+        }
+    }
+
+    public void allocateVehicleToDriver(User driver, Vehicle vehicle) {
+        DatabaseUtil.executeTransaction(session -> {
+            if (vehicle instanceof Car) {
+                driver.setCar((Car) vehicle);
+            } else if (vehicle instanceof Truck) {
+                driver.setTruck((Truck) vehicle);
+            }
+            session.update(driver);
+            vehicle.setVehicleStatus(VehicleStatus.IN_USE);
+            session.update(vehicle);
+        });
     }
 }
