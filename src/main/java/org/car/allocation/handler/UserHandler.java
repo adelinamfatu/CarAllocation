@@ -175,6 +175,32 @@ public class UserHandler {
         displayUserDetails(LoggedInUserContext.getLoggedInUser());
     }
 
+    public void deleteUser() {
+        if (LoggedInUserContext.getLoggedInUser().getRole() != UserRole.ADMIN) {
+            System.out.println(messages.getString("delete.user.permission.denied"));
+            return;
+        }
+
+        System.out.println(messages.getString("delete.user.prompt"));
+        String usernameToDelete = scanner.nextLine();
+
+        // Prevent admin from deleting themselves
+        if (usernameToDelete.equals(LoggedInUserContext.getLoggedInUser().getUsername())) {
+            System.out.println(messages.getString("delete.user.self.denied"));
+            return;
+        }
+
+        Optional<User> userOptional = userService.findUserByUsername(usernameToDelete);
+        if (!userOptional.isPresent()) {
+            System.out.println(messages.getString("delete.user.not.found"));
+            return;
+        }
+
+        userService.deleteUserById(userOptional.get().getId());
+        System.out.println(MessageFormat.format(messages.getString("delete.user.successful"), usernameToDelete));
+    }
+
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         return email.matches(emailRegex);

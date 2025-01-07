@@ -64,6 +64,10 @@ public class User implements VehicleObserver {
     public User() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public UserRole getRole() {
         return role;
     }
