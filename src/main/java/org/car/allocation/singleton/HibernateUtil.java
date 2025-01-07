@@ -5,11 +5,14 @@ import org.hibernate.cfg.Configuration;
 
 /**
  * HibernateUtil is a utility class for managing the Hibernate SessionFactory.
- * It is responsible for initializing the SessionFactory and providing methods
- * to get the SessionFactory instance and shut it down when no longer needed.
+ * This class implements the Singleton pattern to ensure that only one
+ * instance of the SessionFactory is created and shared across the application.
+ * The SessionFactory is eagerly initialized at the time of class loading,
+ * ensuring thread safety and immediate availability but potentially consuming
+ * resources even if it is not used.
  */
 public class HibernateUtil {
-    // The SessionFactory instance used to create Hibernate sessions
+    //The SessionFactory instance used to create Hibernate sessions
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
     /**

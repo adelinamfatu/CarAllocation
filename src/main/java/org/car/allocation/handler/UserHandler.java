@@ -22,7 +22,7 @@ public class UserHandler {
         this.userService = new UserService();
     }
 
-    public void handleLogin(UserRole role) {
+    public void handleLogin() {
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
         System.out.println(messages.getString("login.password.prompt"));
@@ -31,47 +31,42 @@ public class UserHandler {
         User user = userService.findUserByUsername(username).orElse(null);
 
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            if (user.getRole() == role) {
-                this.loggedInUser = user; //Save the logged-in user
-                System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, role));
-                showPermissions(role);
-                new MenuHandler(scanner, role, this).showOptions();
-            } else {
-                System.out.println(MessageFormat.format(messages.getString("login.unauthorized"), role));
-            }
+            this.loggedInUser = user; //Save the logged-in user
+            System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, user.getRole()));
+            new MenuHandler(scanner, user.getRole(), this).showOptions();
         } else {
             System.out.println(messages.getString("login.invalid"));
         }
     }
 
-    public void handleSignIn(UserRole role) {
-        System.out.println(messages.getString("signin.prompt"));
+    public void handleSignUp() {
+        System.out.println(messages.getString("signup.prompt"));
 
-        System.out.println(messages.getString("signin.firstname"));
+        System.out.println(messages.getString("signup.firstname"));
         String firstName = scanner.nextLine();
 
-        System.out.println(messages.getString("signin.lastname"));
+        System.out.println(messages.getString("signup.lastname"));
         String lastName = scanner.nextLine();
 
         String email = "";
         while (true) {
-            System.out.println(messages.getString("signin.email"));
+            System.out.println(messages.getString("signup.email"));
             email = scanner.nextLine();
             if (isValidEmail(email)) {
                 break;
             } else {
-                System.out.println(messages.getString("signin.email.invalid"));
+                System.out.println(messages.getString("signup.email.invalid"));
             }
         }
 
         String phoneNumber = "";
         while (true) {
-            System.out.println(messages.getString("signin.phone_number"));
+            System.out.println(messages.getString("signup.phone_number"));
             phoneNumber = scanner.nextLine();
             if (isValidPhoneNumber(phoneNumber)) {
                 break;
             } else {
-                System.out.println(messages.getString("signin.phone_number.invalid"));
+                System.out.println(messages.getString("signup.phone_number.invalid"));
             }
         }
 
@@ -85,12 +80,32 @@ public class UserHandler {
             if (isValidPassword(password)) {
                 break;
             } else {
-                System.out.println(messages.getString("Invalid password. Please enter a valid password."));
+                System.out.println(messages.getString("signup.password.invalid"));
             }
         }
 
-        userService.createUser(firstName, lastName, email, phoneNumber, username, password, role);
-        System.out.println(messages.getString("signin.successful"));
+        System.out.println(messages.getString("main.select_role"));
+        System.out.println("1. Driver");
+        System.out.println("2. Manager");
+        System.out.println("3. Admin");
+        int roleChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        UserRole role = switch (roleChoice) {
+            case 1 -> UserRole.DRIVER;
+            case 2 -> UserRole.MANAGER;
+            case 3 -> UserRole.ADMIN;
+            default -> null;
+        };
+
+        if (role != null) {
+            userService.createUser(firstName, lastName, email, phoneNumber, username, password, role);
+            System.out.println(messages.getString("signup.successful"));
+            showPermissions(role);
+            new MenuHandler(scanner, role, this).showOptions();
+        } else {
+            System.out.println(messages.getString("main.invalid_role"));
+        }
     }
 
     private void displayUserDetails(User user) {

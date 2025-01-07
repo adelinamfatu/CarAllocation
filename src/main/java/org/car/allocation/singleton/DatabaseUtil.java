@@ -4,6 +4,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+/**
+ * Utility singleton class for managing Hibernate database operations.
+ * SessionFactory instance is created only once and shared across the
+ * entire application. It uses eager initialization, meaning the
+ * SessionFactory is instantiated at the time of class loading, ensuring
+ * immediate availability but potentially consuming resources upfront.
+ * Provides static methods to open sessions and execute transactions,
+ * making it a convenient utility for database operations.
+ */
 public class DatabaseUtil {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 

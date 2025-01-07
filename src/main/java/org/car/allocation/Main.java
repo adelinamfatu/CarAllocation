@@ -32,10 +32,8 @@ public class Main {
 
         while (!exit) {
             System.out.println("\n" + messages.getString("main.option.prompt"));
-            System.out.println(messages.getString("main.option.login_driver"));
-            System.out.println(messages.getString("main.option.login_manager"));
-            System.out.println(messages.getString("main.option.login_admin"));
-            System.out.println(messages.getString("main.option.signin"));
+            System.out.println(messages.getString("main.option.login"));
+            System.out.println(messages.getString("main.option.signup"));
             System.out.println(messages.getString("main.option.exit"));
 
             int choice = scanner.nextInt();
@@ -43,38 +41,12 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    userHandler.handleLogin(UserRole.DRIVER);
+                    userHandler.handleLogin();
                     break;
                 case 2:
-                    userHandler.handleLogin(UserRole.MANAGER);
+                    userHandler.handleSignUp();
                     break;
                 case 3:
-                    userHandler.handleLogin(UserRole.ADMIN);
-                    break;
-                case 4:
-                    System.out.println(messages.getString("main.select_role"));
-                    System.out.println("1. Driver");
-                    System.out.println("2. Manager");
-                    System.out.println("3. Admin");
-                    int roleChoice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    switch (roleChoice) {
-                        case 1:
-                            userHandler.handleSignIn(UserRole.DRIVER);
-                            break;
-                        case 2:
-                            userHandler.handleSignIn(UserRole.MANAGER);
-                            break;
-                        case 3:
-                            userHandler.handleSignIn(UserRole.ADMIN);
-                            break;
-                        default:
-                            System.out.println(messages.getString("main.invalid_role"));
-                            break;
-                    }
-                    break;
-                case 5:
                     System.out.println(messages.getString("main.exiting"));
                     exit = true;
                     break;
