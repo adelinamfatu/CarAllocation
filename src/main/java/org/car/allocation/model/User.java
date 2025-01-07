@@ -156,16 +156,4 @@ public class User implements VehicleObserver {
             System.out.println(role + " " + firstName + " cannot perform any actions on the vehicle.");
         }
     }
-
-    /**
-     * User-specific access to reserve a vehicle. Available only if the vehicle is AVAILABLE
-     */
-    public void reserveVehicle(Vehicle vehicle) {
-        if (PermissionManager.isActionAllowed(role, vehicle.getVehicleStatus(), "RESERVE")) {
-            System.out.println(role + " " + firstName + " has reserved the vehicle.");
-            vehicle.setVehicleStatus(VehicleStatus.IN_USE);
-        } else {
-            System.out.println(role + " " + firstName + " cannot reserve the vehicle.");
-        }
-    }
 }

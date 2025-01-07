@@ -2,6 +2,7 @@ package org.car.allocation.handler;
 
 import org.car.allocation.model.User;
 import org.car.allocation.service.UserService;
+import org.car.allocation.util.LoggedInUserContext;
 import org.car.allocation.util.UserRole;
 
 import java.util.Optional;
@@ -14,8 +15,6 @@ public class UserHandler {
     private final Scanner scanner;
     private final UserService userService;
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
-
-    private User loggedInUser;
 
     public UserHandler(Scanner scanner) {
         this.scanner = scanner;
@@ -31,7 +30,7 @@ public class UserHandler {
         User user = userService.findUserByUsername(username).orElse(null);
 
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            this.loggedInUser = user; //Save the logged-in user
+            LoggedInUserContext.setLoggedInUser(user); //Save the logged-in user
             System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, user.getRole()));
             new MenuHandler(scanner, user.getRole(), this).showOptions();
         } else {
@@ -118,7 +117,7 @@ public class UserHandler {
     }
 
     public void updateUserDetails() {
-        displayUserDetails(loggedInUser);
+        displayUserDetails(LoggedInUserContext.getLoggedInUser());
         System.out.println(messages.getString("update.user.prompt"));
         System.out.println(messages.getString("update.user.options"));
 
@@ -129,28 +128,28 @@ public class UserHandler {
             case 1:
                 System.out.println(messages.getString("signin.username"));
                 String newUsername = scanner.nextLine();
-                loggedInUser.setUsername(newUsername);
+                LoggedInUserContext.getLoggedInUser().setUsername(newUsername);
                 break;
             case 2:
                 System.out.println(messages.getString("login.password.prompt"));
                 String newPassword = scanner.nextLine();
-                loggedInUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+                LoggedInUserContext.getLoggedInUser().setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
                 break;
             case 3:
                 System.out.println(messages.getString("signin.firstname"));
                 String firstName = scanner.nextLine();
-                loggedInUser.setFirstName(firstName);
+                LoggedInUserContext.getLoggedInUser().setFirstName(firstName);
                 break;
             case 4:
                 System.out.println(messages.getString("signin.lastname"));
                 String lastName = scanner.nextLine();
-                loggedInUser.setLastName(lastName);
+                LoggedInUserContext.getLoggedInUser().setLastName(lastName);
                 break;
             case 5:
                 System.out.println(messages.getString("signin.email"));
                 String email = scanner.nextLine();
                 if (isValidEmail(email)) {
-                    loggedInUser.setEmail(email);
+                    LoggedInUserContext.getLoggedInUser().setEmail(email);
                 } else {
                     System.out.println(messages.getString("invalid.email"));
                     break;
@@ -160,7 +159,7 @@ public class UserHandler {
                 System.out.println(messages.getString("signin.phone_number"));
                 String phoneNumber = scanner.nextLine();
                 if (isValidPhoneNumber(phoneNumber)) {
-                    loggedInUser.setPhoneNumber(phoneNumber);
+                    LoggedInUserContext.getLoggedInUser().setPhoneNumber(phoneNumber);
                 } else {
                     System.out.println(messages.getString("invalid.phone_number"));
                     break;
@@ -171,9 +170,9 @@ public class UserHandler {
                 return;
         }
 
-        userService.updateUser(loggedInUser);
+        userService.updateUser(LoggedInUserContext.getLoggedInUser());
         System.out.println(messages.getString("update.user.successful"));
-        displayUserDetails(loggedInUser);
+        displayUserDetails(LoggedInUserContext.getLoggedInUser());
     }
 
     private boolean isValidEmail(String email) {

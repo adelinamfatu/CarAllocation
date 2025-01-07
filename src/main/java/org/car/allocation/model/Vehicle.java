@@ -121,6 +121,10 @@ public abstract class Vehicle {
         this.maxSpeed = maxSpeed;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Retrieves the current status of the vehicle.
      * @return The current status (VehicleStatus) of the vehicle.

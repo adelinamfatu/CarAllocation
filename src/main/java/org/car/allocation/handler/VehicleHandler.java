@@ -5,11 +5,9 @@ import org.car.allocation.abstract_factory.TruckFactory;
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
+import org.car.allocation.service.UserService;
 import org.car.allocation.service.VehicleService;
-import org.car.allocation.util.EngineType;
-import org.car.allocation.util.PermissionManager;
-import org.car.allocation.util.UserRole;
-import org.car.allocation.util.VehicleStatus;
+import org.car.allocation.util.*;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -22,6 +20,7 @@ public class VehicleHandler {
     private final Scanner scanner;
     private UserRole userRole;
     private final VehicleService<Vehicle> vehicleService = new VehicleService<>();
+    private final UserService userService = new UserService();
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
 
     public VehicleHandler(Scanner scanner, UserRole role) {
@@ -345,54 +344,61 @@ public class VehicleHandler {
     }
 
     public void releaseVehicle() {
+        var loggedInUser = LoggedInUserContext.getLoggedInUser();
         if (userRole != UserRole.DRIVER) {
             System.out.println(messages.getString("invalid.role"));
             return;
         }
 
+        //Check if the user has a vehicle assigned (either car or truck)
+        Vehicle vehicleToRelease = null;
+        if (loggedInUser.getCar() != null) {
+            vehicleToRelease = loggedInUser.getCar();
+            loggedInUser.setCar(null); //Remove the car assignment
+        } else if (loggedInUser.getTruck() != null) {
+            vehicleToRelease = loggedInUser.getTruck();
+            loggedInUser.setTruck(null); //Remove the truck assignment
+        }
+
+        if (vehicleToRelease == null) {
+            System.out.println(messages.getString("vehicle.no.assignment"));
+            return;
+        }
+
+        //Proceed with releasing the vehicle (same as before)
         System.out.println(messages.getString("release.vehicle.prompt"));
-        System.out.println(messages.getString("vehicle.type.prompt"));
+        String input = scanner.nextLine().trim().toLowerCase();
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        if (input.equals("yes") || input.equals("da")) {
+            Optional<? extends Vehicle> vehicleOptional = Optional.empty();
+            if (vehicleToRelease instanceof Car) {
+                vehicleOptional = vehicleService.findCarById(vehicleToRelease.getId());
+            } else if (vehicleToRelease instanceof Truck) {
+                vehicleOptional = vehicleService.findTruckById(vehicleToRelease.getId());
+            }
 
-        if (choice != 1 && choice != 2) {
-            System.out.println(messages.getString("invalid.option"));
-            return;
-        }
+            Vehicle vehicle = vehicleOptional.get();
+            System.out.println("Current mileage: " + vehicle.getMileage());
+            System.out.println(messages.getString("enter.new.mileage"));
+            double newMileage = scanner.nextDouble();
+            scanner.nextLine();
 
-        viewAllVehicles();
-        System.out.println(messages.getString("vehicle.id.prompt.release"));
-        int vehicleId = scanner.nextInt();
-        scanner.nextLine();
+            if (newMileage < vehicle.getMileage()) {
+                System.out.println(messages.getString("invalid.mileage"));
+                return;
+            }
 
-        Optional<? extends Vehicle> vehicleOptional;
-        if (choice == 1) {
-            vehicleOptional = vehicleService.findCarById(vehicleId);
+            vehicle.setMileage(newMileage);
+            vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); //Change status to available
+            vehicleService.updateVehicle(vehicle);
+
+            //Update the logged-in user in the database to reflect that the vehicle was released
+            userService.updateUser(loggedInUser);
+
+            System.out.println(messages.getString("vehicle.released") + newMileage);
         } else {
-            vehicleOptional = vehicleService.findTruckById(vehicleId);
+            System.out.println(messages.getString("release.cancelled"));
         }
-
-        if (!vehicleOptional.isPresent() || vehicleOptional.get().getVehicleStatus() != VehicleStatus.IN_USE) {
-            System.out.println(messages.getString("vehicle.no.use"));
-            return;
-        }
-
-        Vehicle vehicle = vehicleOptional.get();
-        System.out.println("Current mileage: " + vehicle.getMileage());
-        System.out.println(messages.getString("enter.new.mileage"));
-        double newMileage = scanner.nextDouble();
-        scanner.nextLine();
-
-        if (newMileage < vehicle.getMileage()) {
-            System.out.println(messages.getString("invalid.mileage"));
-            return;
-        }
-
-        vehicle.setMileage(newMileage);
-        vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); //Change status to available
-        System.out.println(messages.getString("vehicle.released") + newMileage);
-        vehicleService.updateVehicle(vehicle);
 
         pause();
     }
