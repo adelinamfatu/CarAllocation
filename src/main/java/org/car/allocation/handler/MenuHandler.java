@@ -50,7 +50,7 @@ public class MenuHandler {
                     userHandler.updateUserDetails();
                     break;
                 case 8:
-                    userHandler.deleteUser(); // Adaugă această linie
+                    userHandler.deleteUser();
                     break;
                 case 9:
                     backToMenu = true;

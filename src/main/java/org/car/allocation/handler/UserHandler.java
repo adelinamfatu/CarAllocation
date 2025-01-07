@@ -126,7 +126,7 @@ public class UserHandler {
 
         switch (choice) {
             case 1:
-                System.out.println(messages.getString("signin.username"));
+                System.out.println(messages.getString("signup.username"));
                 String newUsername = scanner.nextLine();
                 LoggedInUserContext.getLoggedInUser().setUsername(newUsername);
                 break;
@@ -136,17 +136,17 @@ public class UserHandler {
                 LoggedInUserContext.getLoggedInUser().setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
                 break;
             case 3:
-                System.out.println(messages.getString("signin.firstname"));
+                System.out.println(messages.getString("signup.firstname"));
                 String firstName = scanner.nextLine();
                 LoggedInUserContext.getLoggedInUser().setFirstName(firstName);
                 break;
             case 4:
-                System.out.println(messages.getString("signin.lastname"));
+                System.out.println(messages.getString("signup.lastname"));
                 String lastName = scanner.nextLine();
                 LoggedInUserContext.getLoggedInUser().setLastName(lastName);
                 break;
             case 5:
-                System.out.println(messages.getString("signin.email"));
+                System.out.println(messages.getString("signup.email"));
                 String email = scanner.nextLine();
                 if (isValidEmail(email)) {
                     LoggedInUserContext.getLoggedInUser().setEmail(email);
@@ -156,7 +156,7 @@ public class UserHandler {
                 }
                 break;
             case 6:
-                System.out.println(messages.getString("signin.phone_number"));
+                System.out.println(messages.getString("signup.phone_number"));
                 String phoneNumber = scanner.nextLine();
                 if (isValidPhoneNumber(phoneNumber)) {
                     LoggedInUserContext.getLoggedInUser().setPhoneNumber(phoneNumber);
