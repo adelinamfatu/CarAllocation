@@ -1,4 +1,4 @@
-package org.car.allocation.util;
+package org.car.allocation.singleton;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

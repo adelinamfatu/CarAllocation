@@ -32,7 +32,7 @@ public class UserHandler {
 
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
             if (user.getRole() == role) {
-                this.loggedInUser = user; // save the logged in user
+                this.loggedInUser = user; //Save the logged-in user
                 System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, role));
                 showPermissions(role);
                 new MenuHandler(scanner, role, this).showOptions();
@@ -60,7 +60,7 @@ public class UserHandler {
             if (isValidEmail(email)) {
                 break;
             } else {
-                System.out.println("Email invalid. Vă rugăm să introduceți un email valid.");
+                System.out.println(messages.getString("signin.email.invalid"));
             }
         }
 
@@ -71,7 +71,7 @@ public class UserHandler {
             if (isValidPhoneNumber(phoneNumber)) {
                 break;
             } else {
-                System.out.println("Număr de telefon invalid. Vă rugăm să introduceți un număr valid.");
+                System.out.println(messages.getString("signin.phone_number.invalid"));
             }
         }
 
@@ -85,7 +85,7 @@ public class UserHandler {
             if (isValidPassword(password)) {
                 break;
             } else {
-                System.out.println("Parolă invalidă. Vă rugăm să introduceți o parolă validă.");
+                System.out.println(messages.getString("Invalid password. Please enter a valid password."));
             }
         }
 
@@ -107,9 +107,8 @@ public class UserHandler {
         System.out.println(messages.getString("update.user.prompt"));
         System.out.println(messages.getString("update.user.options"));
 
-
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consuming the newline left-over
+        scanner.nextLine();
 
         switch (choice) {
             case 1:
@@ -167,12 +166,10 @@ public class UserHandler {
         return email.matches(emailRegex);
     }
 
-
     private boolean isValidPhoneNumber(String phoneNumber) {
         String phoneRegex = "^(\\+?[0-9]{1,3})?([0-9]{10})$";
         return phoneNumber.matches(phoneRegex);
     }
-
 
     private boolean isValidPassword(String password) {
         String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$";

@@ -10,20 +10,16 @@ import org.car.allocation.model.Car;
 import org.car.allocation.model.Truck;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.repository.VehicleRepository;
-import org.car.allocation.util.PermissionManager;
-import org.car.allocation.util.UserRole;
 import org.car.allocation.util.VehicleStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
     private final VehicleRepository<Vehicle> vehicleRepository = new VehicleRepository<>(Vehicle.class);
+    private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
 
     private final UserService userService;
     public VehicleService() {
@@ -110,37 +106,36 @@ public class VehicleService<T extends Vehicle> {
         Specification<Vehicle> operationalSpec = new OperationableSpecification(50.0);
 
         // Initialize the allocation handler with the chosen specification (filter) and the appropriate strategy
-        VehicleAllocationHandler allocationHandler = new VehicleAllocationHandler(selectStrategy(allVehicles), operationalSpec);
+        VehicleAllocationHandler allocationHandler = new VehicleAllocationHandler(selectStrategy(), operationalSpec);
 
         //Use the handler to filter and allocate the vehicle
         Vehicle allocatedVehicle = allocationHandler.allocateVehicle(allVehicles);
 
         if (allocatedVehicle == null) {
-            System.out.println("No vehicle could be allocated with the selected strategies.");
+            System.out.println(messages.getString("vehicle.allocate.strategy.error"));
             return null;
         }
 
-        // Check if there is an available driver
+        //Check if there is an available driver
         Optional<User> availableDriver = userService.findAvailableDriver();
         if (!availableDriver.isPresent()) {
-            System.out.println("No available driver to allocate to vehicle.");
+            System.out.println(messages.getString("no.available.driver"));
             return null;
         }
 
-        // If a driver is available, proceed to allocate the vehicle and update statuses
+        //If a driver is available, proceed to allocate the vehicle and update statuses
         userService.allocateVehicleToDriver(availableDriver.get(), allocatedVehicle);
         allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);
         updateVehicle(allocatedVehicle);
 
         System.out.println("Vehicle with ID " + allocatedVehicle.getId() + " has been allocated to driver " + availableDriver.get().getUsername() + " (" + availableDriver.get().getFirstName() + " " + availableDriver.get().getLastName() + ")");
         return allocatedVehicle;
-
     }
 
-    private AllocationStrategy selectStrategy(List<Vehicle> availableVehicles) {
+    private AllocationStrategy selectStrategy() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Do you need to transport cargo? (yes/no)");
+        System.out.println(messages.getString("vehicle.allocate.cargo"));
         String cargoResponse = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(cargoResponse)) {
@@ -151,13 +146,13 @@ public class VehicleService<T extends Vehicle> {
     }
 
     private AllocationStrategy handleCargoRequest(Scanner scanner) {
-        System.out.println("Do you need a refrigerated truck? (yes/no)");
+        System.out.println(messages.getString("vehicle.allocate.refrigeration"));
         String refrigerationResponse = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(refrigerationResponse)) {
             return new RefrigerationStrategy();
         } else {
-            System.out.println("Enter the minimum cargo capacity required (or -1 for no specific requirement):");
+            System.out.println(messages.getString("vehicle.allocate.capacity"));
             double minCargoCapacity = scanner.nextDouble();
             if (minCargoCapacity > 0) {
                 return new CargoPriorityStrategy(minCargoCapacity);
@@ -168,16 +163,15 @@ public class VehicleService<T extends Vehicle> {
     }
 
     private AllocationStrategy handlePassengerRequest(Scanner scanner) {
-        System.out.println("Are you looking for a comfortable car for passengers? (yes/no)");
+        System.out.println(messages.getString("vehicle.allocate.comfort"));
         String comfortResponse = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(comfortResponse)) {
-            System.out.println("Enter the minimum passenger capacity required:");
+            System.out.println(messages.getString("vehicle.allocate.passenger_capacity"));
             int minPassengerCapacity = scanner.nextInt();
             return new ComfortPriorityStrategy(minPassengerCapacity);
         } else {
             return new FuelEfficientStrategy();
         }
     }
-
 }

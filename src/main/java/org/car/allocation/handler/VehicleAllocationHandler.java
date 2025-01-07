@@ -7,6 +7,9 @@ import org.car.allocation.strategy.AllocationStrategy;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The VehicleAllocationHandler handles the vehicle allocation based on a certain strategy and specification
+ */
 public class VehicleAllocationHandler {
     private AllocationStrategy strategy;
     private Specification<Vehicle> filterSpecification;

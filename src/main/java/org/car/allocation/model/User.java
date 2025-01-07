@@ -64,14 +64,6 @@ public class User implements VehicleObserver {
     public User() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public UserRole getRole() {
         return role;
     }
@@ -171,7 +163,7 @@ public class User implements VehicleObserver {
     public void reserveVehicle(Vehicle vehicle) {
         if (PermissionManager.isActionAllowed(role, vehicle.getVehicleStatus(), "RESERVE")) {
             System.out.println(role + " " + firstName + " has reserved the vehicle.");
-            vehicle.setVehicleStatus(VehicleStatus.RESERVED);
+            vehicle.setVehicleStatus(VehicleStatus.IN_USE);
         } else {
             System.out.println(role + " " + firstName + " cannot reserve the vehicle.");
         }

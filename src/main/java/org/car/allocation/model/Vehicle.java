@@ -194,7 +194,4 @@ public abstract class Vehicle {
             System.out.println("Vehiculul este deja în mentenanță.");
         }
     }
-
-
-
 }

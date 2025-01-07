@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserRepository {
-
     public Optional<User> findById(long id) {
         try (Session session = DatabaseUtil.openSession()) {
             User user = session.get(User.class, id);

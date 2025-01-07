@@ -6,6 +6,5 @@ package org.car.allocation.util;
 public enum VehicleStatus {
     AVAILABLE,
     IN_USE,
-    IN_MAINTENANCE,
-    RESERVED
+    IN_MAINTENANCE
 }

@@ -1,10 +1,9 @@
 package org.car.allocation;
 
-import org.car.allocation.handler.MenuHandler;
 import org.car.allocation.handler.UserHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.car.allocation.util.HibernateUtil;
+import org.car.allocation.singleton.HibernateUtil;
 import org.car.allocation.util.UserRole;
 
 import java.util.ResourceBundle;
@@ -40,7 +39,7 @@ public class Main {
             System.out.println(messages.getString("main.option.exit"));
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -58,7 +57,7 @@ public class Main {
                     System.out.println("2. Manager");
                     System.out.println("3. Admin");
                     int roleChoice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine();
 
                     switch (roleChoice) {
                         case 1:

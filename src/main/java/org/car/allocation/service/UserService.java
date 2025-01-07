@@ -27,10 +27,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<User> findUserById(long id) {
-        return userRepository.findById(id);
-    }
-
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -48,13 +44,11 @@ public class UserService {
         userRepository.update(user);
     }
 
-
     public void createUser(String firstName, String lastName, String email, String phoneNumber, String username, String password, UserRole role) {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User newUser = new User(role, firstName, lastName, email, phoneNumber, username, hashedPassword, null, null);
         addUser(newUser);
     }
-
 
     public Optional<User> findAvailableDriver() {
         try (Session session = DatabaseUtil.openSession()) {
@@ -62,7 +56,7 @@ public class UserService {
                     .setParameter("role", UserRole.DRIVER)
                     .list();
 
-            return drivers.stream().findFirst(); // first driver available
+            return drivers.stream().findFirst(); //First driver available
         }
     }
 

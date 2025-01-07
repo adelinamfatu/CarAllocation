@@ -15,6 +15,9 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The VehicleHandler class does all the necessary operations on vehicles: adding, deleting, updating.
+ */
 public class VehicleHandler {
     private final Scanner scanner;
     private UserRole userRole;
@@ -35,7 +38,7 @@ public class VehicleHandler {
 
         if (typeChoice != 1 && typeChoice != 2) {
             System.out.println(messages.getString("returning.menu"));
-            return;  //Exit the method to stop further processing
+            return; //Exit the method to stop further processing
         }
 
         //Common vehicle properties
@@ -157,39 +160,37 @@ public class VehicleHandler {
 
     public void viewVehiclesByStatus() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce the desired status: (AVAILABLE, IN_USE, IN_MAINTENANCE, RESERVED):");
+        System.out.println(messages.getString("vehicle.status.enter"));
         String statusInput = scanner.nextLine().trim().toUpperCase();
 
         try {
             VehicleStatus status = VehicleStatus.valueOf(statusInput);
             List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
             if (vehicles.isEmpty()) {
-                System.out.println("There are no vehicles with status: " + status);
+                System.out.println(messages.getString("no.vehicles.status") + status);
             } else {
                 System.out.println("Vehicles with status " + status + ":");
                 vehicles.forEach(vehicle -> System.out.println(vehicle));
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid status. Please reintroduce the correct status.");
+            System.out.println(messages.getString("invalid.status"));
         }
 
         pause();
-
     }
 
     public void viewAvailableVehicles() {
         List<Vehicle> availableVehicles = vehicleService.getAvailableVehicles();
         if (availableVehicles.isEmpty()) {
-            System.out.println("No available vehicles at the moment.");
+            System.out.println(messages.getString("no.vehicles.available"));
         } else {
-            System.out.println("Available Vehicles:");
+            System.out.println(messages.getString("available.vehicles"));
             for (Vehicle vehicle : availableVehicles) {
                 System.out.println(vehicle);
             }
         }
 
         pause();
-
     }
 
     public void deleteVehicle() {
@@ -239,7 +240,7 @@ public class VehicleHandler {
             scanner.nextLine();
         } catch (Exception e) {
             System.out.println(messages.getString("invalid.option"));
-            scanner.next(); //Clear scanner buffer
+            scanner.next();
             return;
         }
 
@@ -273,7 +274,7 @@ public class VehicleHandler {
             }
 
             if (propertyChoice == properties.length) {
-                System.out.println("Are you sure you want to put the vehicle in maintenance? (yes/no)");
+                System.out.println(messages.getString("maintenance.confirm"));
                 String confirmation = scanner.nextLine().trim().toLowerCase();
 
                 if ("yes".equals(confirmation)) {
@@ -308,7 +309,6 @@ public class VehicleHandler {
         pause();
     }
 
-
     private void updateVehicleProperty(Vehicle vehicle, int propertyChoice, String newValue) {
         switch (propertyChoice) {
             case 1:
@@ -336,9 +336,9 @@ public class VehicleHandler {
     public void allocateVehicle() {
         Vehicle vehicle = vehicleService.allocateVehicle();
         if (vehicle != null) {
-            System.out.println("Allocated Vehicle: " + vehicle);
+            System.out.println(messages.getString("vehicle.allocate") + vehicle);
         } else {
-            System.out.println("No vehicle available that fits the criteria.");
+            System.out.println(messages.getString("vehicle.allocate.error"));
         }
 
         pause();
@@ -394,23 +394,22 @@ public class VehicleHandler {
         System.out.println(messages.getString("vehicle.released") + newMileage);
         vehicleService.updateVehicle(vehicle);
 
-
         pause();
     }
 
     private void pause() {
         try {
-            Thread.sleep(3000); // 3 seconds
+            Thread.sleep(3000); //3 seconds
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            System.out.println("Failed to pause the thread.");
+            System.out.println(messages.getString("thread.error"));
         }
     }
 
     public void putVehicleInMaintenanceByLicensePlate(String licensePlate, UserRole userRole) {
         List<Vehicle> allVehicles = vehicleService.getAllVehicles();
         Optional<Vehicle> vehicleOpt = allVehicles.stream()
-                .filter(vehicle -> vehicle.getLicensePlate().equalsIgnoreCase(licensePlate))  // Căutăm vehiculul după numărul de înmatriculare
+                .filter(vehicle -> vehicle.getLicensePlate().equalsIgnoreCase(licensePlate))
                 .findFirst();
 
         if (vehicleOpt.isPresent()) {
@@ -420,13 +419,10 @@ public class VehicleHandler {
                 vehicle.putInMaintenance();
                 vehicleService.updateVehicle(vehicle);
             } else {
-                System.out.println("Permisiune refuzată: Nu aveți permisiunea de a pune acest vehicul în mentenanță.");
+                System.out.println(messages.getString("maintenance.permission.invalid"));
             }
         } else {
-            System.out.println("Vehiculul cu numărul de înmatriculare " + licensePlate + " nu a fost găsit.");
+            System.out.println("Vehicle with license plate " + licensePlate + " was not found.");
         }
     }
-
-
-
 }

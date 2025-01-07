@@ -25,7 +25,7 @@ public class MenuHandler {
         while (!backToMenu) {
             System.out.println(messages.getString("admin.options"));
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -64,7 +64,7 @@ public class MenuHandler {
         while (!backToMenu) {
             System.out.println(messages.getString("manager.options"));
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -74,10 +74,10 @@ public class MenuHandler {
                     vehicleHandler.viewVehiclesByStatus();
                     break;
                 case 3:
-                    // alocarea unui vehicul
+                    vehicleHandler.allocateVehicle();
                     break;
                 case 4:
-                    System.out.println("Introduceți numele vehiculului pe care doriți să-l puneți în mentenanță:");
+                    System.out.println(messages.getString("enter.maintenance"));
                     String licensePlate = scanner.nextLine();
                     vehicleHandler.putVehicleInMaintenanceByLicensePlate(licensePlate,UserRole.MANAGER);
                     break;
@@ -99,7 +99,7 @@ public class MenuHandler {
         while (!backToMenu) {
             System.out.println(messages.getString("driver.options"));
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -134,8 +134,4 @@ public class MenuHandler {
                 break;
         }
     }
-
-
-
-
 }
