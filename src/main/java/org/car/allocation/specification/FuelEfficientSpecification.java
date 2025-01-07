@@ -2,7 +2,10 @@ package org.car.allocation.specification;
 
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.util.EngineType;
-
+/**
+ * A specification to filter vehicles that are fuel-efficient based on engine type, mileage, and speed.
+ * This specification ensures vehicles meet certain criteria for fuel efficiency and performance.
+ */
 public class FuelEfficientSpecification implements Specification<Vehicle> {
     private final EngineType preferredEngineType;
     private final double maxMileage;

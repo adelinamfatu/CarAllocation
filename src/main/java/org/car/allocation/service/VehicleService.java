@@ -14,7 +14,11 @@ import org.car.allocation.util.VehicleStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Service layer responsible for managing vehicles (Cars and Trucks) and their allocation to drivers.
+ * Handles vehicle status, allocation strategies, and vehicle updates.
+ * @param <T> the type of vehicle (Car or Truck).
+ */
 public class VehicleService<T extends Vehicle> {
     private final VehicleRepository<Car> carRepository = new VehicleRepository<>(Car.class);
     private final VehicleRepository<Truck> truckRepository = new VehicleRepository<>(Truck.class);
@@ -26,7 +30,11 @@ public class VehicleService<T extends Vehicle> {
         this.userService = new UserService();
     }
 
-    //Utility method to gather all vehicles from the repository
+    /**
+     * Retrieves a list of all vehicles (both Cars and Trucks).
+     *
+     * @return a list of all vehicles.
+     */
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
         vehicles.addAll(carRepository.findAll());
@@ -34,7 +42,12 @@ public class VehicleService<T extends Vehicle> {
         return vehicles;
     }
 
-    //Get all available vehicles
+    /**
+     * Retrieves a list of vehicles that are available for use.
+     * Filters vehicles based on their status (available).
+     *
+     * @return a list of available vehicles.
+     */
     public List<Vehicle> getAvailableVehicles() {
         Specification<Vehicle> specification = new VehicleStatusSpecification(VehicleStatus.AVAILABLE);
 
@@ -44,6 +57,12 @@ public class VehicleService<T extends Vehicle> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a list of vehicles filtered by a specific status.
+     *
+     * @param status the vehicle status to filter by (e.g., AVAILABLE, IN_USE).
+     * @return a list of vehicles with the specified status.
+     */
     public List<Vehicle> getVehiclesByStatus(VehicleStatus status) {
         Specification<Vehicle> specification = new VehicleStatusSpecification(status);
 
@@ -53,28 +72,66 @@ public class VehicleService<T extends Vehicle> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Adds a car to the repository.
+     *
+     * @param car the car to be added.
+     */
     public void addCar(Car car) {
         carRepository.save(car);
     }
 
+    /**
+     * Adds a truck to the repository.
+     *
+     * @param truck the truck to be added.
+     */
     public void addTruck(Truck truck) {
         truckRepository.save(truck);
     }
 
+    /**
+     * Finds a car by its ID.
+     *
+     * @param id the ID of the car.
+     * @return an Optional containing the car, if found.
+     */
     public Optional<Car> findCarById(int id) {
         return carRepository.findById(id);
     }
 
+    /**
+     * Finds a truck by its ID.
+     *
+     * @param id the ID of the truck.
+     * @return an Optional containing the truck, if found.
+     */
     public Optional<Truck> findTruckById(int id) {
         return truckRepository.findById(id);
     }
 
+    /**
+     * Retrieves a list of all cars.
+     *
+     * @return a list of all cars.
+     */
     public List<Car> getAllCars() {
         return carRepository.findAll();
     }
 
+    /**
+     * Retrieves a list of all trucks.
+     *
+     * @return a list of all trucks.
+     */
     public List<Truck> getAllTrucks() { return truckRepository.findAll(); }
 
+    /**
+     * Deletes a car by its ID.
+     *
+     * @param id the ID of the car to delete.
+     * @return true if the car was deleted, false otherwise.
+     */
     public boolean deleteCarById(int id) {
         Optional<Car> car = carRepository.findById(id);
         if (car.isPresent()) {
@@ -84,6 +141,12 @@ public class VehicleService<T extends Vehicle> {
         return false;
     }
 
+    /**
+     * Deletes a truck by its ID.
+     *
+     * @param id the ID of the truck to delete.
+     * @return true if the truck was deleted, false otherwise.
+     */
     public boolean deleteTruckById(int id) {
         Optional<Truck> truck = truckRepository.findById(id);
         if (truck.isPresent()) {
@@ -93,22 +156,37 @@ public class VehicleService<T extends Vehicle> {
         return false;
     }
 
+    /**
+     * Updates the details of a car in the repository.
+     *
+     * @param car the car with updated details.
+     */
     public void updateCar(Car car) { carRepository.update(car); }
 
+    /**
+     * Updates the details of a truck in the repository.
+     *
+     * @param truck the truck with updated details.
+     */
     public void updateTruck(Truck truck) { truckRepository.update(truck); }
+
+    /**
+     * Updates the details of a vehicle (generic type).
+     *
+     * @param vehicle the vehicle with updated details.
+     */
     public void updateVehicle(Vehicle vehicle) { vehicleRepository.update(vehicle); }
 
+    /**
+     * Allocates a vehicle to an available driver based on the user's input.
+     * The allocation strategy depends on whether the vehicle is for cargo or passenger use.
+     *
+     * @return the allocated vehicle, or null if no vehicle was allocated.
+     */
     public Vehicle allocateVehicle() {
-        //Gather all vehicles
         List<Vehicle> allVehicles = getAllVehicles();
-
-        //Create the specification for operational vehicles (e.g., minimum fuel level)
         Specification<Vehicle> operationalSpec = new OperationableSpecification(50.0);
-
-        // Initialize the allocation handler with the chosen specification (filter) and the appropriate strategy
         VehicleAllocationHandler allocationHandler = new VehicleAllocationHandler(selectStrategy(), operationalSpec);
-
-        //Use the handler to filter and allocate the vehicle
         Vehicle allocatedVehicle = allocationHandler.allocateVehicle(allVehicles);
 
         if (allocatedVehicle == null) {
@@ -116,14 +194,12 @@ public class VehicleService<T extends Vehicle> {
             return null;
         }
 
-        //Check if there is an available driver
         Optional<User> availableDriver = userService.findAvailableDriver();
         if (!availableDriver.isPresent()) {
             System.out.println(messages.getString("no.available.driver"));
             return null;
         }
 
-        //If a driver is available, proceed to allocate the vehicle and update statuses
         userService.allocateVehicleToDriver(availableDriver.get(), allocatedVehicle);
         allocatedVehicle.setVehicleStatus(VehicleStatus.IN_USE);
         updateVehicle(allocatedVehicle);
@@ -132,6 +208,11 @@ public class VehicleService<T extends Vehicle> {
         return allocatedVehicle;
     }
 
+    /**
+     * Selects the appropriate allocation strategy based on user input.
+     *
+     * @return the selected allocation strategy.
+     */
     private AllocationStrategy selectStrategy() {
         Scanner scanner = new Scanner(System.in);
 
@@ -145,6 +226,12 @@ public class VehicleService<T extends Vehicle> {
         }
     }
 
+    /**
+     * Handles the cargo allocation request by prompting the user for additional details.
+     *
+     * @param scanner the scanner to read user input.
+     * @return the selected cargo allocation strategy.
+     */
     private AllocationStrategy handleCargoRequest(Scanner scanner) {
         System.out.println(messages.getString("vehicle.allocate.refrigeration"));
         String refrigerationResponse = scanner.nextLine().trim().toLowerCase();
@@ -162,6 +249,12 @@ public class VehicleService<T extends Vehicle> {
         }
     }
 
+    /**
+     * Handles the passenger allocation request by prompting the user for additional details.
+     *
+     * @param scanner the scanner to read user input.
+     * @return the selected passenger allocation strategy.
+     */
     private AllocationStrategy handlePassengerRequest(Scanner scanner) {
         System.out.println(messages.getString("vehicle.allocate.comfort"));
         String comfortResponse = scanner.nextLine().trim().toLowerCase();

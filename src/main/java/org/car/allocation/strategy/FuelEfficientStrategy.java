@@ -13,23 +13,29 @@ import java.util.List;
  * It selects the vehicle that TO BE COMPLETED
  */
 public class FuelEfficientStrategy implements AllocationStrategy {
+    /**
+     * Allocates a vehicle based on fuel efficiency.
+     * <p>
+     * This method first filters the available vehicles based on whether they have an eco-friendly engine
+     * type (electric or hybrid). If no eco-friendly vehicles are found, it will then check for fuel-efficient
+     * vehicles that meet the specified criteria (petrol engine with a mileage under 150,000 and minimum speed of 100).
+     * </p>
+     *
+     * @param availableVehicles the list of available vehicles.
+     * @return the most fuel-efficient vehicle that meets the criteria, or {@code null} if no suitable vehicle is found.
+     */
     @Override
     public Vehicle allocate(List<Vehicle> availableVehicles) {
-        //Specification for Electric or Hybrid vehicles (engine type)
         Specification<Vehicle> ecoFriendlySpec = new EngineTypeSpecification(EngineType.ELECTRIC)
-                .or(new EngineTypeSpecification(EngineType.HYBRID));  //Vehicles with electric or hybrid engines
+                .or(new EngineTypeSpecification(EngineType.HYBRID));
 
-        //Specification for non-Electric/Hybrid vehicles with certain mileage and speed
         Specification<Vehicle> nonEcoSpec = new FuelEfficientSpecification(EngineType.PETROL, 150000, 100);
 
-        //Combine both specifications using OR: prioritize either eco-friendly or non-eco-friendly vehicles with high fuel efficiency
         var specification = ecoFriendlySpec.or(nonEcoSpec);
-
         List<Vehicle> filteredVehicles = availableVehicles.stream()
-                .filter(specification::isSatisfiedBy) //Filter based on the specification
+                .filter(specification::isSatisfiedBy)
                 .toList();
 
-        //Allocate the first available vehicle from the filtered list
         return filteredVehicles.stream()
                 .findFirst()
                 .orElse(null);

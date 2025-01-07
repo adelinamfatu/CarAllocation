@@ -28,6 +28,10 @@ public class VehicleHandler {
         this.userRole = role;
     }
 
+    /**
+     * Prompts the user to input details to add a new vehicle (either a car or truck)
+     * and adds the vehicle to the system.
+     */
     public void addNewVehicle() {
         System.out.println(messages.getString("add.vehicle.prompt"));
         System.out.println(messages.getString("vehicle.type.prompt"));
@@ -39,8 +43,6 @@ public class VehicleHandler {
             System.out.println(messages.getString("returning.menu"));
             return; //Exit the method to stop further processing
         }
-
-        //Common vehicle properties
         System.out.println(messages.getString("enter.license"));
         String licensePlate = scanner.nextLine();
 
@@ -108,6 +110,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Displays all vehicles in the system, grouped by type (Car or Truck) and engine type.
+     */
     public void viewAllVehicles() {
         System.out.println(messages.getString("all.vehicles"));
 
@@ -132,7 +137,6 @@ public class VehicleHandler {
             });
         }
 
-        //Display all trucks grouped by engine type
         System.out.println(messages.getString("trucks.section"));
         List<Truck> trucks = vehicleService.getAllTrucks();
         if (trucks.isEmpty()) {
@@ -157,6 +161,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Prompts the user to enter a vehicle status and displays all vehicles matching that status.
+     */
     public void viewVehiclesByStatus() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(messages.getString("vehicle.status.enter"));
@@ -178,6 +185,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Displays all available vehicles that are not currently allocated to any user.
+     */
     public void viewAvailableVehicles() {
         List<Vehicle> availableVehicles = vehicleService.getAvailableVehicles();
         if (availableVehicles.isEmpty()) {
@@ -192,6 +202,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Prompts the user to enter a vehicle ID and deletes the specified vehicle from the system.
+     */
     public void deleteVehicle() {
         viewAllVehicles();
         System.out.println(messages.getString("delete.vehicle.prompt"));
@@ -220,6 +233,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Prompts the user to input new values to update the properties of a specific vehicle.
+     */
     public void updateVehicle() {
         System.out.println(messages.getString("vehicle.update.prompt"));
         System.out.println(messages.getString("vehicle.type.prompt"));
@@ -308,6 +324,13 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Updates a specific property of the given vehicle.
+     *
+     * @param vehicle         the vehicle to update
+     * @param propertyChoice the index of the property to update
+     * @param newValue       the new value for the property
+     */
     private void updateVehicleProperty(Vehicle vehicle, int propertyChoice, String newValue) {
         switch (propertyChoice) {
             case 1:
@@ -332,6 +355,9 @@ public class VehicleHandler {
         }
     }
 
+    /**
+     * Allocates a vehicle to the current user and assigns it to them.
+     */
     public void allocateVehicle() {
         Vehicle vehicle = vehicleService.allocateVehicle();
         if (vehicle != null) {
@@ -343,6 +369,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Releases the vehicle currently assigned to the user.
+     */
     public void releaseVehicle() {
         var loggedInUser = LoggedInUserContext.getLoggedInUser();
         if (userRole != UserRole.DRIVER) {
@@ -350,7 +379,6 @@ public class VehicleHandler {
             return;
         }
 
-        //Check if the user has a vehicle assigned (either car or truck)
         Vehicle vehicleToRelease = null;
         if (loggedInUser.getCar() != null) {
             vehicleToRelease = loggedInUser.getCar();
@@ -364,8 +392,6 @@ public class VehicleHandler {
             System.out.println(messages.getString("vehicle.no.assignment"));
             return;
         }
-
-        //Proceed with releasing the vehicle (same as before)
         System.out.println(messages.getString("release.vehicle.prompt"));
         String input = scanner.nextLine().trim().toLowerCase();
 
@@ -392,7 +418,6 @@ public class VehicleHandler {
             vehicle.setVehicleStatus(VehicleStatus.AVAILABLE); //Change status to available
             vehicleService.updateVehicle(vehicle);
 
-            //Update the logged-in user in the database to reflect that the vehicle was released
             userService.updateUser(loggedInUser);
 
             System.out.println(messages.getString("vehicle.released") + newMileage);
@@ -403,6 +428,9 @@ public class VehicleHandler {
         pause();
     }
 
+    /**
+     * Pauses the execution for 3 seconds to give the user time to read messages before continuing.
+     */
     private void pause() {
         try {
             Thread.sleep(3000); //3 seconds
@@ -412,6 +440,12 @@ public class VehicleHandler {
         }
     }
 
+    /**
+     * Puts a vehicle into maintenance mode by its license plate number.
+     *
+     * @param licensePlate the license plate of the vehicle to put in maintenance
+     * @param userRole the role of the user performing the action
+     */
     public void putVehicleInMaintenanceByLicensePlate(String licensePlate, UserRole userRole) {
         List<Vehicle> allVehicles = vehicleService.getAllVehicles();
         Optional<Vehicle> vehicleOpt = allVehicles.stream()

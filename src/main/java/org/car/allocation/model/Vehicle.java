@@ -64,11 +64,12 @@ public abstract class Vehicle {
         this.mileage = mileage;
     }
 
+    public int getId() { return id; }
+
     /**
      * Retrieves the license plate of the vehicle.
      * @return The license plate of the vehicle.
      */
-    public int getId() { return id; }
     public String getLicensePlate() {
         return licensePlate;
     }
@@ -81,34 +82,18 @@ public abstract class Vehicle {
         this.licensePlate = licensePlate;
     }
 
-    /**
-     * Retrieves the model of the vehicle.
-     * @return The model of the vehicle.
-     */
     public String getModel() {
         return model;
     }
 
-    /**
-     * Sets the model of the vehicle.
-     * @param model The new model of the vehicle.
-     */
     public void setModel(String model) {
         this.model = model;
     }
 
-    /**
-     * Retrieves the current fuel level of the vehicle.
-     * @return The fuel level of the vehicle.
-     */
     public double getFuelLevel() {
         return fuelLevel;
     }
 
-    /**
-     * Sets the fuel level of the vehicle.
-     * @param fuelLevel The new fuel level of the vehicle.
-     */
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;
     }
@@ -125,35 +110,19 @@ public abstract class Vehicle {
         this.id = id;
     }
 
-    /**
-     * Retrieves the current status of the vehicle.
-     * @return The current status (VehicleStatus) of the vehicle.
-     */
     public VehicleStatus getVehicleStatus() {
         return vehicleStatus;
     }
 
-    /**
-     * Sets the status of the vehicle and notifies observers of the change.
-     * @param vehicleStatus The new status of the vehicle.
-     */
     public void setVehicleStatus(VehicleStatus vehicleStatus) {
         this.vehicleStatus = vehicleStatus;
         statusNotifier.notifyObservers("Vehicle status changed to: " + vehicleStatus);
     }
 
-    /**
-     * Retrieves the total mileage of the vehicle.
-     * @return The mileage of the vehicle.
-     */
     public double getMileage() {
         return mileage;
     }
 
-    /**
-     * Sets the mileage of the vehicle.
-     * @param mileage The new mileage of the vehicle.
-     */
     public void setMileage(double mileage) {
         this.mileage = mileage;
     }
@@ -182,20 +151,29 @@ public abstract class Vehicle {
         statusNotifier.removeObserver(observer);
     }
 
-    //
     public void releaseVehicle(double newMileage) {
         setMileage(newMileage);
         setVehicleStatus(VehicleStatus.AVAILABLE);
         statusNotifier.notifyObservers("Vehicle released and available with new mileage: " + newMileage);
     }
 
-    public void putInMaintenance() {
-        if (this.vehicleStatus != VehicleStatus.IN_MAINTENANCE) {
-            setVehicleStatus(VehicleStatus.IN_MAINTENANCE);
-            statusNotifier.notifyObservers("Vehicle has been put into maintenance.");
-            System.out.println("Vehiculul a fost pus în mentenanță.");
-        } else {
-            System.out.println("Vehiculul este deja în mentenanță.");
-        }
+/**
+ * Puts the vehicle into maintenance if it is not already in maintenance.
+
+ * This method checks the current status of the vehicle. If the vehicle's status is not already
+ * set to "IN_MAINTENANCE", it updates the status to "IN_MAINTENANCE" and notifies observers
+ * of the change. A message is printed to indicate that the vehicle has been placed in maintenance.
+ * If the vehicle is already in maintenance, a message is printed stating that the vehicle is already
+ * in maintenance.
+ * @throws IllegalStateException if the status change cannot be made (e.g., due to permissions).
+ */
+public void putInMaintenance() {
+    if (this.vehicleStatus != VehicleStatus.IN_MAINTENANCE) {
+        setVehicleStatus(VehicleStatus.IN_MAINTENANCE);
+        statusNotifier.notifyObservers("Vehicle has been put into maintenance.");
+        System.out.println("Vehiculul a fost pus în mentenanță.");
+    } else {
+        System.out.println("Vehiculul este deja în mentenanță.");
     }
+}
 }

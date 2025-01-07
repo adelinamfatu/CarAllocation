@@ -11,6 +11,10 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * This class handles user-related functionalities such as login, signup, user updates, and user deletion.
+ * It communicates with the UserService to perform CRUD operations on users.
+ */
 public class UserHandler {
     private final Scanner scanner;
     private final UserService userService;
@@ -21,6 +25,12 @@ public class UserHandler {
         this.userService = new UserService();
     }
 
+    /**
+     * Handles the user login process by verifying username and password.
+     * If the login is successful, the user is logged in and redirected to the appropriate menu options.
+     *
+     * @throws *InputMismatchException If an invalid input type is entered for username or password.
+     */
     public void handleLogin() {
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
@@ -38,6 +48,12 @@ public class UserHandler {
         }
     }
 
+    /**
+     * Handles the user signup process, which includes gathering necessary information
+     * (such as name, email, password, role) and storing the user in the system.
+     *
+     * @throws *InputMismatchException If an invalid input type is entered for any field.
+     */
     public void handleSignUp() {
         System.out.println(messages.getString("signup.prompt"));
 
@@ -107,6 +123,11 @@ public class UserHandler {
         }
     }
 
+    /**
+     * Displays the details of the provided user, hiding sensitive information like password.
+     *
+     * @param user The user whose details are to be displayed.
+     */
     private void displayUserDetails(User user) {
         System.out.println("Username: " + user.getUsername());
         System.out.println("Password: [PROTECTED]");
@@ -116,6 +137,12 @@ public class UserHandler {
         System.out.println("Phone number: " + user.getPhoneNumber());
     }
 
+    /**
+     * Allows the logged-in user to update their details (username, password, email, phone number, etc.).
+     * After making the changes, the updated user details are displayed.
+     *
+     * @throws *InputMismatchException If an invalid input type is entered for any field.
+     */
     public void updateUserDetails() {
         displayUserDetails(LoggedInUserContext.getLoggedInUser());
         System.out.println(messages.getString("update.user.prompt"));
@@ -175,6 +202,11 @@ public class UserHandler {
         displayUserDetails(LoggedInUserContext.getLoggedInUser());
     }
 
+    /**
+     * Deletes a user from the system. Only an ADMIN can delete users.
+     *
+     * @throws IllegalAccessException If a non-admin user tries to delete another user.
+     */
     public void deleteUser() {
         if (LoggedInUserContext.getLoggedInUser().getRole() != UserRole.ADMIN) {
             System.out.println(messages.getString("delete.user.permission.denied"));
@@ -184,7 +216,6 @@ public class UserHandler {
         System.out.println(messages.getString("delete.user.prompt"));
         String usernameToDelete = scanner.nextLine();
 
-        // Prevent admin from deleting themselves
         if (usernameToDelete.equals(LoggedInUserContext.getLoggedInUser().getUsername())) {
             System.out.println(messages.getString("delete.user.self.denied"));
             return;
@@ -200,22 +231,44 @@ public class UserHandler {
         System.out.println(MessageFormat.format(messages.getString("delete.user.successful"), usernameToDelete));
     }
 
-
+    /**
+     * Validates if the given email follows a correct format.
+     *
+     * @param email The email to be validated.
+     * @return true if the email format is valid, false otherwise.
+     */
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         return email.matches(emailRegex);
     }
 
+    /**
+     * Validates if the given phone number follows a correct format.
+     *
+     * @param phoneNumber The phone number to be validated.
+     * @return true if the phone number format is valid, false otherwise.
+     */
     private boolean isValidPhoneNumber(String phoneNumber) {
         String phoneRegex = "^(\\+?[0-9]{1,3})?([0-9]{10})$";
         return phoneNumber.matches(phoneRegex);
     }
 
+    /**
+     * Validates if the given password meets the required format (minimum 8 characters, at least one uppercase, one lowercase, and one digit).
+     *
+     * @param password The password to be validated.
+     * @return true if the password format is valid, false otherwise.
+     */
     private boolean isValidPassword(String password) {
         String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$";
         return password.matches(passwordRegex);
     }
 
+    /**
+     * Displays the permissions associated with a specific user role.
+     *
+     * @param role The role of the user (DRIVER, MANAGER, ADMIN).
+     */
     private void showPermissions(UserRole role) {
         switch (role) {
             case DRIVER:

@@ -6,6 +6,10 @@ import org.car.allocation.util.UserRole;
 import java.util.*;
 import java.text.MessageFormat;
 
+/**
+ * This class handles the display and processing of menu options for different user roles.
+ * It delegates actions based on the user role (ADMIN, MANAGER, DRIVER).
+ */
 public class MenuHandler {
     private final Scanner scanner;
     private final UserRole userRole;
@@ -19,7 +23,12 @@ public class MenuHandler {
         this.vehicleHandler = new VehicleHandler(scanner, userRole);
         this.userHandler = userHandler;
     }
-
+    /**
+     * Displays the menu options available to an ADMIN user and processes the input.
+     * The ADMIN can manage vehicles and users.
+     *
+     * @throws InputMismatchException If an invalid input type is entered.
+     */
     private void showAdminOptions() {
         boolean backToMenu = false;
         while (!backToMenu) {
@@ -61,7 +70,12 @@ public class MenuHandler {
             }
         }
     }
-
+    /**
+     * Displays the menu options available to a MANAGER user and processes the input.
+     * The MANAGER can manage vehicle availability, maintenance, and allocate vehicles.
+     *
+     * @throws InputMismatchException If an invalid input type is entered.
+     */
     private void showManagerOptions() {
         boolean backToMenu = false;
         while (!backToMenu) {
@@ -96,7 +110,12 @@ public class MenuHandler {
             }
         }
     }
-
+    /**
+     * Displays the menu options available to a DRIVER user and processes the input.
+     * The DRIVER can view available vehicles and release a vehicle.
+     *
+     * @throws InputMismatchException If an invalid input type is entered.
+     */
     private void showDriverOptions() {
         boolean backToMenu = false;
         while (!backToMenu) {
@@ -123,7 +142,12 @@ public class MenuHandler {
             }
         }
     }
-
+    /**
+     * Displays the menu options based on the user role.
+     * Calls the appropriate method based on the role (ADMIN, MANAGER, DRIVER).
+     *
+     * @throws InputMismatchException If an invalid input type is entered.
+     */
     public void showOptions() {
         switch (userRole) {
             case ADMIN:

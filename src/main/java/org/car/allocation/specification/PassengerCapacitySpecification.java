@@ -3,6 +3,11 @@ package org.car.allocation.specification;
 import org.car.allocation.model.Car;
 import org.car.allocation.model.Vehicle;
 
+/**
+ * A specification that checks if a vehicle has a minimum passenger capacity.
+ * <p>
+ * This specification is specifically applicable to {@link Car} objects, as only cars have a defined passenger capacity.
+ */
 public class PassengerCapacitySpecification implements Specification<Vehicle> {
     private final int minPassengerCapacity;
 

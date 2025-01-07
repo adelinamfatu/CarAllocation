@@ -1,5 +1,10 @@
 package org.car.allocation.specification;
 
+/**
+ * A specification that evaluates the logical OR operation between two specifications.
+ *
+ * @param <T> the type of objects that this specification applies to.
+ */
 public class OrSpecification<T> implements Specification<T> {
     private final Specification<T> spec1;
     private final Specification<T> spec2;

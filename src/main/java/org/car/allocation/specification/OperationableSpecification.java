@@ -3,6 +3,10 @@ package org.car.allocation.specification;
 import org.car.allocation.model.Vehicle;
 import org.car.allocation.util.VehicleStatus;
 
+/**
+ * A specification to determine if a vehicle is operational.
+ * A vehicle is considered operational if it is available and has a sufficient fuel level.
+ */
 public class OperationableSpecification implements Specification<Vehicle> {
     private final double minFuelLevel;
 

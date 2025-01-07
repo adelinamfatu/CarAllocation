@@ -1,5 +1,11 @@
 package org.car.allocation.specification;
 
+/**
+ * A specification that negates another specification.
+ * This is used to create a condition where the criteria of the provided specification are not met.
+ *
+ * @param <T> the type of object this specification can be applied to.
+ */
 public class NotSpecification<T> implements Specification<T> {
     private final Specification<T> spec;
 

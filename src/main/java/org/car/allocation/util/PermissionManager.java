@@ -1,7 +1,15 @@
 package org.car.allocation.util;
 
 import java.util.*;
-
+/**
+ * The {@link PermissionManager} class handles the permissions associated with various user roles
+ * and vehicle statuses in the system.
+ * <p>
+ * This class defines a set of permissions for each user role (such as DRIVER, MANAGER, ADMIN)
+ * for different vehicle statuses (AVAILABLE, IN_USE, IN_MAINTENANCE). It allows checking if a specific
+ * action is allowed for a given role and vehicle status, as well as retrieving all the allowed actions.
+ * </p>
+ */
 public class PermissionManager {
     private static final Map<UserRole, Map<VehicleStatus, List<String>>> permissions = new HashMap<>();
 
