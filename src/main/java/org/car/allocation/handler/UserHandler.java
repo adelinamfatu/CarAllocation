@@ -5,6 +5,7 @@ import org.car.allocation.service.UserService;
 import org.car.allocation.util.LoggedInUserContext;
 import org.car.allocation.util.UserRole;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Scanner;
 import java.text.MessageFormat;
@@ -35,12 +36,14 @@ public class UserHandler {
         System.out.println(messages.getString("login.prompt"));
         String username = scanner.nextLine();
         System.out.println(messages.getString("login.password.prompt"));
-        String password = scanner.nextLine();
+
+        // Use custom method to read and mask password
+        String password = readPassword();
 
         User user = userService.findUserByUsername(username).orElse(null);
 
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            LoggedInUserContext.setLoggedInUser(user); //Save the logged-in user
+            LoggedInUserContext.setLoggedInUser(user); // Save the logged-in user
             System.out.println(MessageFormat.format(messages.getString("welcome.message"), username, user.getRole()));
             new MenuHandler(scanner, user.getRole(), this).showOptions();
         } else {
@@ -48,12 +51,6 @@ public class UserHandler {
         }
     }
 
-    /**
-     * Handles the user signup process, which includes gathering necessary information
-     * (such as name, email, password, role) and storing the user in the system.
-     *
-     * @throws *InputMismatchException If an invalid input type is entered for any field.
-     */
     public void handleSignUp() {
         System.out.println(messages.getString("signup.prompt"));
 
@@ -91,7 +88,7 @@ public class UserHandler {
         String password = "";
         while (true) {
             System.out.println(messages.getString("login.password.prompt"));
-            password = scanner.nextLine();
+            password = readPassword();
             if (isValidPassword(password)) {
                 break;
             } else {
@@ -122,6 +119,37 @@ public class UserHandler {
             System.out.println(messages.getString("main.invalid_role"));
         }
     }
+
+    public static String readPassword() {
+        StringBuilder password = new StringBuilder();
+
+        try {
+            System.out.print("Enter password: ");
+            System.out.flush();
+
+            int ch;
+            while ((ch = System.in.read()) != -1) {
+                if (ch == '\n' || ch == '\r') {
+                    break;
+                }
+
+                // Avoid echoing newline characters
+                if (ch != '\n' && ch != '\r') {
+                    password.append((char) ch);
+                    System.out.print("*");
+                    System.out.flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println();
+        return password.toString();
+    }
+
+
+
 
     /**
      * Displays the details of the provided user, hiding sensitive information like password.
