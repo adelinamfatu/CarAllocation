@@ -34,6 +34,7 @@ public class VehicleStatusNotifier {
      * @param status The new status of the vehicle.
      */
     public void notifyObservers(String status) {
+        System.out.println("Notifying observers about the status change: " + status);
         for (VehicleObserver observer : observers) {
             observer.update(status);
         }
