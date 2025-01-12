@@ -1,5 +1,7 @@
 package org.car.allocation.observer;
 
+import org.car.allocation.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class VehicleStatusNotifier {
      */
     public void addObserver(VehicleObserver observer) {
         observers.add(observer);
+        if (observer instanceof User) {
+            User user = (User) observer;
+            System.out.println("Added observer: " + user.getFirstName() + " " + user.getLastName());
+        } else {
+            System.out.println("Added observer: " + observer);
+        }
     }
 
     /**
@@ -25,6 +33,7 @@ public class VehicleStatusNotifier {
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {
+        System.out.println("Remove observer: " + observer);
         observers.remove(observer);
     }
 
@@ -38,5 +47,9 @@ public class VehicleStatusNotifier {
         for (VehicleObserver observer : observers) {
             observer.update(status);
         }
+    }
+
+    public List<VehicleObserver> getObservers() {
+        return observers;
     }
 }

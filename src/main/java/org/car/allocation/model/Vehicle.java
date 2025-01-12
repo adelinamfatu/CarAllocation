@@ -6,6 +6,8 @@ import org.car.allocation.observer.VehicleStatusNotifier;
 import org.car.allocation.util.EngineType;
 import org.car.allocation.util.VehicleStatus;
 
+import java.util.List;
+
 /**
  * The abstract Vehicle class represents a generic vehicle with basic attributes such as
  * license plate, model, fuel level, availability, and maintenance status. It also
@@ -149,6 +151,10 @@ public abstract class Vehicle {
      */
     public void removeObserver(VehicleObserver observer) {
         statusNotifier.removeObserver(observer);
+    }
+
+    public boolean hasObserver(VehicleObserver observer) {
+        return statusNotifier.getObservers().contains(observer);
     }
 
     public void releaseVehicle(double newMileage) {

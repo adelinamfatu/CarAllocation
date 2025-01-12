@@ -116,6 +116,16 @@ public class UserService {
                 driver.setTruck((Truck) vehicle);
             }
             session.update(driver);
+
+            if (!vehicle.hasObserver(driver)) {
+                vehicle.addObserver(driver);
+            }
+
+            for (User user : getAllUsers()) {
+                if (user.getRole() == UserRole.MANAGER || user.getRole() == UserRole.ADMIN) {
+                    vehicle.addObserver(user);
+                }
+            }
             vehicle.setVehicleStatus(VehicleStatus.IN_USE);
             session.update(vehicle);
         });
