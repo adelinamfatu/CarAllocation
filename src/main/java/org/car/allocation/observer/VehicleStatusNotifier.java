@@ -33,7 +33,12 @@ public class VehicleStatusNotifier {
      * @param observer The observer to be removed.
      */
     public void removeObserver(VehicleObserver observer) {
-        System.out.println("Remove observer: " + observer);
+        if (observer instanceof User) {
+            User user = (User) observer;
+            System.out.println("Remove observer: " + user.getFirstName() + " " + user.getLastName());
+        } else {
+            System.out.println("Added observer: " + observer);
+        }
         observers.remove(observer);
     }
 
